@@ -1,0 +1,14 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="768"
+             Width="1120" Height="768" Background="Transparent"
+             x:Class="TheMule.Views.PrintifySettingsPageView">
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top">
+      <TextBlock Text="Printify Settings" />
+    </StackPanel>
+    <ListBox Background="Transparent"/>
+  </DockPanel>
+</UserControl>
