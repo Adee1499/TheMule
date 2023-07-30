@@ -1,0 +1,77 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TheMule.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1380" d:DesignHeight="768"
+        Width="1380" Height="768"
+        x:Class="TheMule.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico" Title="The Mule"
+        Background="#23292F"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterScreen">
+
+  <Window.Styles>
+    <Style Selector="Button">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="CornerRadius" Value="0" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#181D23" />
+    </Style>
+    <Style Selector="Button:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="#23292F" />
+    </Style>
+    <Style Selector="Button:pressed">
+      <Setter Property="RenderTransform" Value="scale(1)" />
+    </Style>
+  </Window.Styles>
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+
+  <Panel>
+    <StackPanel Width="260" HorizontalAlignment="Left" Background="#0C1116">
+      <Panel Height="80">
+        <TextBlock Text="Aodach Avenue" TextAlignment="Center" Foreground="#F0F6FC"
+                 FontSize="32" FontFamily="{StaticResource BarlowFont}" FontWeight="Medium" VerticalAlignment="Center"/>
+      </Panel>
+      <Panel Height="80">
+        <Image Margin="45 18 45 18" Source="avares://TheMule/Assets/printify.png" />
+      </Panel>
+      <Button Height="60" Width="260" Content="Artworks"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+      <Button Height="60" Width="260" Content="Products"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+      <Button Height="60" Width="260" Content="Orders"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+      <Button Height="60" Width="260" Content="Settings"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+      <Panel Height="80">
+        <Image Margin="45 18 45 18" Source="avares://TheMule/Assets/shopify.png" />
+      </Panel>
+      <Button Height="60" Width="260" Content="Products"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+      <Button Height="60" Width="260" Content="Orders"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+      <Button Height="60" Width="260" Content="Settings"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+    </StackPanel>
+    <Panel Width="1120" HorizontalAlignment="Right">
+      <Carousel Name="Carousel" Grid.Column="1">
+        <!-- Put pages here - best to create custom views for each page. -->
+      </Carousel>
+    </Panel>
+  </Panel>
+
+</Window>
