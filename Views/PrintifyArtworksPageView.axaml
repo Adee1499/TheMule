@@ -17,7 +17,7 @@
 
   <DockPanel>
     <ListBox ItemsSource="{Binding PrintifyArtworks}" SelectedItem="{Binding SelectedArtwork}"
-             Background="Transparent" Margin="10 20">
+             Background="Transparent" Margin="10 35">
       <ListBox.ItemsPanel>
         <ItemsPanelTemplate>
           <WrapPanel />

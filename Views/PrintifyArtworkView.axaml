@@ -8,11 +8,22 @@
              x:Class="TheMule.Views.PrintifyArtworkView"
              x:DataType="vm:PrintifyArtworkViewModel">
   <StackPanel Spacing="5" Width="200">
+    <StackPanel.ContextMenu>
+      <ContextMenu>
+        <MenuItem Header="Archive" Command="{Binding ArchiveCommand}"/>
+      </ContextMenu>
+    </StackPanel.ContextMenu>
     <Border CornerRadius="10" ClipToBounds="True">
       <Panel Background="#23292F" Height="200">
         <Border CornerRadius="5">
-          <Image Width="170" Stretch="Uniform" Source="{Binding PreviewImage}" />
+          <Image Width="170" Stretch="Uniform" Source="{Binding PreviewImage}"/>
         </Border>
+        <TextBlock Text="ARCHIVED" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="35" Foreground="Crimson" FontWeight="Bold" IsVisible="{Binding ArtworkArchived}">
+          <TextBlock.RenderTransform>
+            <RotateTransform Angle="-30" />
+          </TextBlock.RenderTransform>
+        </TextBlock>
         <Panel Height="170" IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}">
           <PathIcon Height="75" Width="75" Data="{StaticResource image_regular}" />
         </Panel>

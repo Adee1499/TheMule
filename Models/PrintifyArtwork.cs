@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TheMule.Services;
@@ -49,15 +50,27 @@ namespace TheMule.Models
         }
 
         private static HttpClient s_httpClient = new();
-        private string CachePath => $"./Cache/{Id}-{FileName}";
+        private string CachePath => $"./Cache/{Id}";
 
         public async Task<Stream> LoadPreviewImageAsync() {
-            if (File.Exists(CachePath)) {
-                return File.OpenRead(CachePath);
+            if (File.Exists($"{CachePath}-{FileName}")) {
+                return File.OpenRead($"{CachePath}-{FileName}");
             } else {
                 var data = await s_httpClient.GetByteArrayAsync(PreviewUrl);
                 return new MemoryStream(data);
             }
+        }
+
+        public Stream SavePreviewImageStream() {
+            if (!Directory.Exists("./Cache")) {
+                Directory.CreateDirectory("./Cache");
+            }
+
+            return File.OpenWrite($"{CachePath}-{FileName}");
+        }
+
+        public async Task<bool> ArchiveArtworkAsync() {
+            return await PrintifyService.ArchiveArtwork(Id);
         }
     }
 

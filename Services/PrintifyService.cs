@@ -1,6 +1,8 @@
 ﻿using RestSharp;
 using RestSharp.Authenticators.OAuth2;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using TheMule.Models;
 
@@ -33,7 +35,6 @@ namespace TheMule.Services
                 foreach (PrintifyArtwork data in response.Data) {
                     uploadsData.Add(data);
                 }
-
                 while (response!.Total > uploadsData.Count) {
                     currentPage++;
 
@@ -46,9 +47,20 @@ namespace TheMule.Services
                     }
                 }
             }
-
-
             return uploadsData;
+        }
+
+        public static async Task<bool> ArchiveArtwork(string imageId) {
+            if (_client == null) InitializeRestClient();
+
+            var request = new RestRequest();
+            request.Resource = $"uploads/{imageId}/archive.json";
+
+            var response = await _client!.PostAsync(request);
+
+            Debug.WriteLine(response.StatusCode);
+
+            return (response.StatusCode == System.Net.HttpStatusCode.OK);
         }
     }
 }
