@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:TheMule.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="240"
+             Width="200" Background="Transparent"
+             x:Class="TheMule.Views.PrintifyArtworkView"
+             x:DataType="vm:PrintifyArtworkViewModel">
+  <StackPanel Spacing="5" Width="200">
+    <Border CornerRadius="10" ClipToBounds="True">
+      <Panel Background="#23292F" Height="200">
+        <Border CornerRadius="5">
+          <Image Width="170" Stretch="Uniform" Source="{Binding PreviewImage}" />
+        </Border>
+        <Panel Height="170" IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}">
+          <PathIcon Height="75" Width="75" Data="{StaticResource image_regular}" />
+        </Panel>
+      </Panel>
+    </Border>
+    <TextBlock HorizontalAlignment="Center" Text="{Binding FileName}"/>
+  </StackPanel>
+</UserControl>

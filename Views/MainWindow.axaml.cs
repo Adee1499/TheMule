@@ -9,7 +9,7 @@ namespace TheMule.Views
 {
     public partial class MainWindow : Window
     {
-        private Carousel _carousel;
+        private TabControl _tabControl;
         
         private Button _printifyArtworksButton;
         private Button _printifyProductsButton;
@@ -30,7 +30,7 @@ namespace TheMule.Views
 
         public MainWindow() {
             InitializeComponent();
-            _carousel = this.Get<Carousel>("crsl_pages");
+            _tabControl = this.Get<TabControl>("tabControl_pages");
             
             _printifyArtworksButton = this.Get<Button>("btn_printifyArtworks");
             _printifyProductsButton = this.Get<Button>("btn_printifyProducts");
@@ -56,31 +56,31 @@ namespace TheMule.Views
             _shopifySettingsPage = this.Get<UserControl>("page_shopifySettings");
 
             _printifyArtworksButton.Click += (o, e) => {
-                _carousel.SelectedItem = _printifyArtworksPage;
+                _tabControl.SelectedItem = _printifyArtworksPage;
                 ChangeActiveButton((Button)o!);
             };
             _printifyProductsButton.Click += (o, e) => {
-                _carousel.SelectedItem = _printifyProductsPage;
+                _tabControl.SelectedItem = _printifyProductsPage;
                 ChangeActiveButton((Button)o!);
             };
             _printifyOrdersButton.Click += (o, e) => {
-                _carousel.SelectedItem = _printifyOrdersPage;
+                _tabControl.SelectedItem = _printifyOrdersPage;
                 ChangeActiveButton((Button)o!);
             };
             _printifySettingsButton.Click += (o, e) => {
-                _carousel.SelectedItem = _printifySettingsPage;
+                _tabControl.SelectedItem = _printifySettingsPage;
                 ChangeActiveButton((Button)o!);
             };
             _shopifyProductsButton.Click += (o, e) => {
-                _carousel.SelectedItem = _shopifyProductsPage;
+                _tabControl.SelectedItem = _shopifyProductsPage;
                 ChangeActiveButton((Button)o!);
             };
             _shopifyOrdersButton.Click += (o, e) => {
-                _carousel.SelectedItem = _shopifyOrdersPage;
+                _tabControl.SelectedItem = _shopifyOrdersPage;
                 ChangeActiveButton((Button)o!);
             };
             _shopifySettingsButton.Click += (o, e) => {
-                _carousel.SelectedItem = _shopifySettingsPage;
+                _tabControl.SelectedItem = _shopifySettingsPage;
                 ChangeActiveButton((Button)o!);
             };
 

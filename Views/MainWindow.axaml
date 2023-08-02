@@ -9,7 +9,7 @@
         x:Class="TheMule.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico" Title="The Mule"
-        Background="#23292F"
+        Background="#0D1116"
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterScreen">
 
@@ -28,6 +28,9 @@
     <Style Selector="Button:pressed">
       <Setter Property="RenderTransform" Value="scale(1)" />
     </Style>
+    <Style Selector="TabItem">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
   </Window.Styles>
 
   <Design.DataContext>
@@ -35,7 +38,7 @@
   </Design.DataContext>
 
   <Panel>
-    <StackPanel Width="260" HorizontalAlignment="Left" Background="#0C1116">
+    <StackPanel Width="260" HorizontalAlignment="Left" Background="#161B22">
       <Panel Height="80">
         <TextBlock Text="Aodach Avenue" TextAlignment="Center" Foreground="#F0F6FC"
                  FontSize="32" FontFamily="{StaticResource BarlowFont}" FontWeight="Medium" VerticalAlignment="Center"/>
@@ -69,15 +72,15 @@
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
     </StackPanel>
     <Panel Width="1120" HorizontalAlignment="Right">
-      <Carousel Name="crsl_pages" Grid.Column="1">
-        <views:PrintifyArtworksPageView Name="page_printifyArtworks" />
+      <TabControl Name="tabControl_pages">
+        <views:PrintifyArtworksPageView Name="page_printifyArtworks"/>
         <views:PrintifyProductsPageView Name="page_printifyProducts" />
         <views:PrintifyOrdersPageView Name="page_printifyOrders" />
         <views:PrintifySettingsPageView Name="page_printifySettings" />
         <views:ShopifyProductsPageView Name="page_shopifyProducts" />
         <views:ShopifyOrdersPageView Name="page_shopifyOrders" />
         <views:ShopifySettingsPageView Name="page_shopifySettings" />
-      </Carousel>
+      </TabControl>
     </Panel>
   </Panel>
 
