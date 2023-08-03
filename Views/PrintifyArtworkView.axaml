@@ -13,22 +13,27 @@
         <MenuItem Header="Archive" Command="{Binding ArchiveCommand}"/>
       </ContextMenu>
     </StackPanel.ContextMenu>
-    <Border CornerRadius="10" ClipToBounds="True">
-      <Panel Background="#23292F" Height="200">
-        <Border CornerRadius="5">
-          <Image Width="170" Stretch="Uniform" Source="{Binding PreviewImage}"/>
-        </Border>
-        <TextBlock Text="ARCHIVED" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   FontSize="35" Foreground="Crimson" FontWeight="Bold" IsVisible="{Binding ArtworkArchived}">
-          <TextBlock.RenderTransform>
-            <RotateTransform Angle="-30" />
-          </TextBlock.RenderTransform>
-        </TextBlock>
-        <Panel Height="170" IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}">
-          <PathIcon Height="75" Width="75" Data="{StaticResource image_regular}" />
+    <Border CornerRadius="10" ClipToBounds="True"
+            ToolTip.Tip="{Binding UploadTime}">
+      <Panel Background="#23292F" Height="230">
+        <Panel Background="Transparent" Height="200" VerticalAlignment="Top">
+          <Border CornerRadius="5">
+            <Image Width="170" Height="170" Stretch="Uniform" 
+                   Margin="15" Source="{Binding PreviewImage}"/>
+          </Border>
+          <TextBlock Text="ARCHIVED" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="{StaticResource BarlowFont}"
+                     FontSize="40" Foreground="Crimson" FontWeight="Bold" IsVisible="{Binding ArtworkArchived}">
+            <TextBlock.RenderTransform>
+              <RotateTransform Angle="-30" />
+            </TextBlock.RenderTransform>
+          </TextBlock>
+          <Panel Height="170" IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}">
+            <PathIcon Height="75" Width="75" Data="{StaticResource image_regular}" />
+          </Panel>
         </Panel>
+        <TextBlock HorizontalAlignment="Center" Text="{Binding FileName}" FontFamily="{StaticResource BarlowFont}"
+                   VerticalAlignment="Bottom" Margin="10" FontSize="16" />
       </Panel>
     </Border>
-    <TextBlock HorizontalAlignment="Center" Text="{Binding FileName}"/>
   </StackPanel>
 </UserControl>

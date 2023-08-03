@@ -7,13 +7,13 @@ using TheMule.Views;
 
 namespace TheMule.ViewModels
 {
-    public class PrintifyArtworksPageViewModel : ViewModelBase
+    public class PrintifyProductsPageViewModel : ViewModelBase
     {
-        private PrintifyArtworkView? _selectedArtwork;
-        public ObservableCollection<PrintifyArtworkViewModel> PrintifyArtworks { get; } = new();
-        public PrintifyArtworkView? SelectedArtwork {
-            get => _selectedArtwork;
-            set => this.RaiseAndSetIfChanged(ref _selectedArtwork, value);
+        private PrintifyProductView? _selectedProduct;
+        public ObservableCollection<PrintifyProductViewModel> PrintifyProducts { get; } = new();
+        public PrintifyProductView? SelectedProduct {
+            get => _selectedProduct;
+            set => this.RaiseAndSetIfChanged(ref _selectedProduct, value);
         }
         private bool _isBusy;
         public bool IsBusy {
@@ -23,23 +23,23 @@ namespace TheMule.ViewModels
 
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public PrintifyArtworksPageViewModel() {
-            FetchArtworks();
+        public PrintifyProductsPageViewModel() {
+            FetchProducts();
         }
 
-        private async void FetchArtworks() {
+        private async void FetchProducts() {
             IsBusy = true;
-            PrintifyArtworks.Clear();
+            PrintifyProducts.Clear();
 
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = _cancellationTokenSource.Token;
 
-            var artworks = await Artwork.GetArtworksAsync();
+            var products = await Product.GetProductsAsync();
 
-            foreach (var artwork in artworks) {
-                var vm = new PrintifyArtworkViewModel(artwork);
-                PrintifyArtworks.Add(vm);
+            foreach (var product in products) {
+                var vm = new PrintifyProductViewModel(product);
+                PrintifyProducts.Add(vm);
             }
 
             if (!cancellationToken.IsCancellationRequested) {
@@ -50,8 +50,8 @@ namespace TheMule.ViewModels
         }
 
         private async void LoadPreviewImages(CancellationToken cancellationToken) {
-            foreach (var artwork in PrintifyArtworks.ToList()) {
-                await artwork.LoadPreview();
+            foreach (var product in PrintifyProducts.ToList()) {
+                await product.LoadPreview();
 
                 if (cancellationToken.IsCancellationRequested) {
                     return;

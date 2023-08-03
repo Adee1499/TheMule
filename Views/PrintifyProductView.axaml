@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:TheMule.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="270"
+             x:Class="TheMule.Views.PrintifyProductView"
+             x:DataType="vm:PrintifyProductViewModel">
+  <StackPanel Spacing="5" Width="200">
+    <Border CornerRadius="10" ClipToBounds="True" ToolTip.Placement="Pointer">
+      <ToolTip.Tip>
+        <StackPanel>
+          <Grid ColumnDefinitions="Auto,5,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" />
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding ProductNameFull}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Tags:" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Tags}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Created at:" />
+            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding CreatedAt}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Updated at:" />
+            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding UpdatedAt}" TextWrapping="Wrap" />
+          </Grid>
+        </StackPanel>
+      </ToolTip.Tip>
+      <Panel Background="#23292F" Height="270">
+        <Panel Background="Transparent" Height="200" VerticalAlignment="Top">
+          <Border CornerRadius="5">
+            <Image Width="170" Height="170" Stretch="Uniform" 
+                   Margin="15" Source="{Binding PreviewImage}" />
+          </Border>
+          <Panel Height="170" IsVisible="{Binding PreviewImage, Converter={x:Static ObjectConverters.IsNull}}">
+            <PathIcon Height="75" Width="75" Data="{StaticResource hanger_regular}" />
+          </Panel>
+        </Panel>
+        <TextBlock HorizontalAlignment="Center" Text="{Binding ProductName}" TextAlignment="Center" FontFamily="{StaticResource BarlowFont}"
+                   VerticalAlignment="Bottom" Margin="10 0 10 55" FontSize="18" />
+        <TextBlock HorizontalAlignment="Center" Text="{Binding BlueprintDetails}" FontFamily="{StaticResource BarlowFont}"
+                   VerticalAlignment="Bottom" Margin="32" FontSize="12" />
+        <TextBlock HorizontalAlignment="Center" Text="2 colors • 5 sizes • Total 10 variants" FontFamily="{StaticResource BarlowFont}"
+                   VerticalAlignment="Bottom" Margin="10" FontSize="12" />
+      </Panel>
+    </Border>
+  </StackPanel>
+</UserControl>

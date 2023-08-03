@@ -4,18 +4,18 @@ using Splat;
 using System;
 using System.Reactive;
 using System.Threading.Tasks;
-using TheMule.Models;
+using TheMule.Models.Printify;
 
 namespace TheMule.ViewModels
 {
     public class PrintifyArtworkViewModel : ViewModelBase
     {
-        private readonly PrintifyArtwork _printifyArtwork;
+        private readonly Artwork _printifyArtwork;
         private readonly ObservableAsPropertyHelper<bool> _artworkArchived;
         public ReactiveCommand<Unit, bool> ArchiveCommand { get; }
         public bool ArtworkArchived => _artworkArchived.Value;
 
-        public PrintifyArtworkViewModel(PrintifyArtwork printifyArtwork) {
+        public PrintifyArtworkViewModel(Artwork printifyArtwork) {
             _printifyArtwork = printifyArtwork;
             ArchiveCommand = ReactiveCommand.CreateFromTask(ArchiveArtworkAsync);
             _artworkArchived = ArchiveCommand.ToProperty(
@@ -26,7 +26,7 @@ namespace TheMule.ViewModels
         }
 
         public string FileName => _printifyArtwork.FileName;
-        public string PreviewUrl => _printifyArtwork.PreviewUrl;
+        public string UploadTime => _printifyArtwork.UploadTime.ToLocalTime().ToString();
 
         private Bitmap? _previewImage;
         public Bitmap? PreviewImage {
