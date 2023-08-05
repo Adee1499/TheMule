@@ -11,30 +11,34 @@ namespace TheMule.Models.Printify
 {
     public class Artwork
     {
-        [JsonPropertyName("id")]
+        [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Id { get; set; }
 
         [JsonPropertyName("file_name")]
         public string FileName { get; set; }
 
-        [JsonPropertyName("height")]
+        [JsonPropertyName("url")]
+        public string ImageUploadUrl { get; set; }
+
+        [JsonPropertyName("height"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Height { get; set; }
 
-        [JsonPropertyName("width")]
+        [JsonPropertyName("width"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Width { get; set; }
 
-        [JsonPropertyName("size")]
+        [JsonPropertyName("size"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Size { get; set; }
 
-        [JsonPropertyName("mime_type")]
+        [JsonPropertyName("mime_type"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string MimeType { get; set; }
 
-        [JsonPropertyName("preview_url")]
+        [JsonPropertyName("preview_url"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string PreviewUrl { get; set; }
 
-        [JsonPropertyName("upload_time"), JsonConverter(typeof(PrintifyDateTimeOffsetConverter))]
+        [JsonPropertyName("upload_time"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault), JsonConverter(typeof(PrintifyDateTimeOffsetConverter))]
         public DateTimeOffset UploadTime { get; set; }
 
+        [JsonConstructor]
         public Artwork(string id, string filename, int height, int width, int size, string mimeType, string previewUrl, DateTimeOffset uploadTime)
         {
             Id = id;
@@ -45,6 +49,11 @@ namespace TheMule.Models.Printify
             MimeType = mimeType;
             PreviewUrl = previewUrl;
             UploadTime = uploadTime;
+        }
+
+        public Artwork(string filename, string imageUrl) {
+            FileName = filename;
+            ImageUploadUrl = imageUrl;
         }
 
         public static async Task<IEnumerable<Artwork>> GetArtworksAsync()
@@ -80,7 +89,17 @@ namespace TheMule.Models.Printify
 
         public async Task<bool> ArchiveArtworkAsync()
         {
-            return await PrintifyService.ArchiveArtwork(Id);
+            return await PrintifyService.ArchiveArtworkAsync(Id);
+        }
+
+        public static async Task<Artwork> UploadArtwork(string filePath, string fileName)
+        {
+            string cloudflareResourceUrl = await CloudflareService.UploadFile(filePath, fileName);
+            if (cloudflareResourceUrl.StartsWith("Error")) return null;
+            Artwork newArtwork = new Artwork(fileName, cloudflareResourceUrl);
+            bool result = await PrintifyService.UploadArtworkAsync(newArtwork);
+            if (!result) return null;
+            return newArtwork;
         }
     }
 

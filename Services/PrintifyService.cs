@@ -1,7 +1,9 @@
 ﻿using RestSharp;
 using RestSharp.Authenticators.OAuth2;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TheMule.Models.Printify;
 
@@ -10,16 +12,19 @@ namespace TheMule.Services
     public static class PrintifyService
     {
         private static RestClient? _client;
-        private static string _shopId = "10241097";
+        private static string? _shopId;
 
-        private static void InitializeRestClient() { 
-            var authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzN2Q0YmQzMDM1ZmUxMWU5YTgwM2FiN2VlYjNjY2M5NyIsImp0aSI6ImNiZmE4MGFmOWMyNTg1MTg5ZDI2ODAyOWUyZWQzYTE0NmMxOWJlMjM0OTY3YjMyNmJmZTQwN2Q0ZDdmOTk2YWRiMjcwZGJmNTc1MTRlNjI1IiwiaWF0IjoxNjg5NTMwOTUwLjQ0MDc2MywibmJmIjoxNjg5NTMwOTUwLjQ0MDc2NywiZXhwIjoxNzIxMTUzMzUwLjQzNjExNCwic3ViIjoiMTI1NTg2MTMiLCJzY29wZXMiOlsic2hvcHMubWFuYWdlIiwic2hvcHMucmVhZCIsImNhdGFsb2cucmVhZCIsIm9yZGVycy5yZWFkIiwib3JkZXJzLndyaXRlIiwicHJvZHVjdHMucmVhZCIsInByb2R1Y3RzLndyaXRlIiwid2ViaG9va3MucmVhZCIsIndlYmhvb2tzLndyaXRlIiwidXBsb2Fkcy5yZWFkIiwidXBsb2Fkcy53cml0ZSIsInByaW50X3Byb3ZpZGVycy5yZWFkIl19.AinHq-eyvfu_T6foongpRtOK5Xhshi8RFjR6CmGQhbAfpqRmcddFz7LqgehOARQGNobkCNscP749TCdWCx4", "Bearer");
+        private static void InitializeRestClient() {
+            SettingsManager.LoadSettings();
+            var authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(SettingsManager.appSettings.Printify.API_Key, "Bearer");
 
             var options = new RestClientOptions("https://api.printify.com/v1/") {
                 Authenticator = authenticator
             };
 
             _client = new RestClient(options);
+
+            _shopId = SettingsManager.appSettings.Printify.Shop_Id;
         }
 
         public static async Task<List<Artwork>> GetArtworksAsync() {
@@ -50,15 +55,31 @@ namespace TheMule.Services
             return uploadsData;
         }
 
-        public static async Task<bool> ArchiveArtwork(string imageId) {
+        public static async Task<bool> ArchiveArtworkAsync(string imageId) {
             if (_client == null) InitializeRestClient();
 
-            var request = new RestRequest();
-            request.Resource = $"uploads/{imageId}/archive.json";
+            var request = new RestRequest {
+                Resource = $"uploads/{imageId}/archive.json"
+            };
 
             var response = await _client!.PostAsync(request);
 
             Debug.WriteLine(response.StatusCode);
+
+            return (response.StatusCode == System.Net.HttpStatusCode.OK);
+        }
+
+        public static async Task<bool> UploadArtworkAsync(Artwork newArtwork) {
+            if (_client == null) InitializeRestClient();
+
+            string jsonBody = JsonSerializer.Serialize(newArtwork);
+
+            var request = new RestRequest {
+                Resource = "uploads/images.json"
+            };
+            request.AddStringBody(jsonBody, ContentType.Json);
+
+            var response = await _client!.PostAsync(request);
 
             return (response.StatusCode == System.Net.HttpStatusCode.OK);
         }
@@ -70,7 +91,7 @@ namespace TheMule.Services
 
             int currentPage = 1;
 
-            var response = await _client.GetJsonAsync<ProductResponse>($"shops/{_shopId}/products.json?page={currentPage}&limit=100");
+            var response = await _client!.GetJsonAsync<ProductResponse>($"shops/{_shopId}/products.json?page={currentPage}&limit=100");
 
             foreach (Product data in response.Data) {
                 productsData.Add(data);

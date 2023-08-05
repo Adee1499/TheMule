@@ -10,7 +10,7 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico" Title="The Mule"
         Background="#0D1116"
-        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaToDecorationsHint="False"
         WindowStartupLocation="CenterScreen">
 
   <Window.Styles>
@@ -24,6 +24,7 @@
     </Style>
     <Style Selector="Button:pressed /template/ ContentPresenter">
       <Setter Property="Background" Value="#23292F" />
+      <Setter Property="Foreground" Value="#FFF27A" />
     </Style>
     <Style Selector="Button:pressed">
       <Setter Property="RenderTransform" Value="scale(1)" />
@@ -40,35 +41,58 @@
   <Panel>
     <StackPanel Width="260" HorizontalAlignment="Left" Background="#161B22">
       <Panel Height="80">
-        <TextBlock Text="Aodach Avenue" TextAlignment="Center" Foreground="#F0F6FC"
+        <TextBlock Text="Aodach Avenue" TextAlignment="Center" Foreground="#fff27a"
                  FontSize="32" FontFamily="{StaticResource BarlowFont}" FontWeight="Medium" VerticalAlignment="Center"/>
       </Panel>
       <Panel Height="80">
         <Image Margin="45 18 45 18" Source="avares://TheMule/Assets/printify.png" />
       </Panel>
-      <Button Name="btn_printifyArtworks" Height="60" Width="260" Content="Artworks"
-                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
-                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-      <Button Name="btn_printifyProducts" Height="60" Width="260" Content="Products"
-                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
-                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-      <Button Name="btn_printifyOrders" Height="60" Width="260" Content="Orders"
-                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
-                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-      <Button Name="btn_printifySettings" Height="60" Width="260" Content="Settings"
-                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
-                    VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
+      <Button Name="btn_printifyArtworks" Height="50" Width="220" Margin="0 5 0 5"
+              VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="20"
+              VerticalContentAlignment="Center" HorizontalContentAlignment="Left">
+        <StackPanel Orientation="Horizontal" Margin="30 0 0 0">
+          <PathIcon Data="{StaticResource artworks_regular}" Margin="0 0 10 0" />
+          <TextBlock Text="Artworks" FontFamily="{StaticResource BarlowFont}" FontSize="24" Margin="10 0 0 0" />
+        </StackPanel>
+      </Button>
+      <Button Name="btn_printifyProducts" Height="50" Width="220" Margin="0 5 0 5"
+              VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="20"
+              VerticalContentAlignment="Center" HorizontalContentAlignment="Left">
+        <StackPanel Orientation="Horizontal" Margin="30 0 0 0">
+          <PathIcon Data="{StaticResource products_regular}" Margin="0 0 10 0" />
+          <TextBlock Text="Products" FontFamily="{StaticResource BarlowFont}" FontSize="24" Margin="10 0 0 0" />
+        </StackPanel>
+      </Button>
+      <Button Name="btn_printifyOrders" Height="50" Width="220" Margin="0 5 0 5"
+              VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="20"
+              VerticalContentAlignment="Center" HorizontalContentAlignment="Left">
+        <StackPanel Orientation="Horizontal" Margin="30 0 0 0">
+          <PathIcon Data="{StaticResource orders_regular}" Margin="0 0 10 0" />
+          <TextBlock Text="Orders" FontFamily="{StaticResource BarlowFont}" FontSize="24" Margin="10 0 0 0" />
+        </StackPanel>
+      </Button>
+      <Button Name="btn_printifySettings" Height="50" Width="220" Margin="0 5 0 5"
+              VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="20"
+              VerticalContentAlignment="Center" HorizontalContentAlignment="Left">
+        <StackPanel Orientation="Horizontal" Margin="30 0 0 0">
+          <PathIcon Data="{StaticResource settings_regular}" Margin="0 0 10 0" />
+          <TextBlock Text="Settings" FontFamily="{StaticResource BarlowFont}" FontSize="24" Margin="10 0 0 0" />
+        </StackPanel>
+      </Button>
       <Panel Height="80">
         <Image Margin="45 18 45 18" Source="avares://TheMule/Assets/shopify.png" />
       </Panel>
-      <Button Name="btn_shopifyProducts" Height="60" Width="260" Content="Products"
-                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+      <Button Name="btn_shopifyProducts" Height="50" Width="220" Content="Products"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" Margin="0 5 0 5"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="20"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-      <Button Name="btn_shopifyOrders" Height="60" Width="260" Content="Orders"
-                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+      <Button Name="btn_shopifyOrders" Height="50" Width="220" Content="Orders"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" Margin="0 5 0 5"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="20"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
-      <Button Name="btn_shopifySettings" Height="60" Width="260" Content="Settings"
-                    FontFamily="{StaticResource BarlowFont}" FontSize="24" 
+      <Button Name="btn_shopifySettings" Height="50" Width="220" Content="Settings"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="24" Margin="0 5 0 5"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="20"
                     VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
     </StackPanel>
     <Panel Width="1120" HorizontalAlignment="Right">

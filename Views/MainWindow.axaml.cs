@@ -1,9 +1,7 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+using TheMule.Services;
 
 namespace TheMule.Views
 {
@@ -29,6 +27,7 @@ namespace TheMule.Views
         private UserControl _shopifySettingsPage;
 
         public MainWindow() {
+            SettingsManager.LoadSettings();
             InitializeComponent();
             _tabControl = this.Get<TabControl>("tabControl_pages");
             
@@ -90,8 +89,10 @@ namespace TheMule.Views
         private void ChangeActiveButton(Button activeButton) {
             foreach (Button button in _buttons) {
                 button.Background = new SolidColorBrush { Color = Color.FromArgb(0, 0, 0, 0) };
+                button.Foreground = new SolidColorBrush { Color = Color.FromRgb(255, 255, 255) };
             }
             activeButton.Background = new SolidColorBrush { Color = Color.FromRgb(35, 41, 47) };
+            activeButton.Foreground = new SolidColorBrush { Color = Color.FromRgb(255, 242, 122) };
         }
     }
 }

@@ -1,7 +1,13 @@
-﻿using ReactiveUI;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
+using ReactiveUI;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
 using System.Threading;
+using System.Threading.Tasks;
 using TheMule.Models.Printify;
 using TheMule.Views;
 

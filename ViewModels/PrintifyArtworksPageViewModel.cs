@@ -1,7 +1,13 @@
-﻿using ReactiveUI;
+﻿using Avalonia.Platform.Storage;
+using ReactiveUI;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
+using System.Windows.Input;
 using TheMule.Models.Printify;
 using TheMule.Views;
 
@@ -15,15 +21,32 @@ namespace TheMule.ViewModels
             get => _selectedArtwork;
             set => this.RaiseAndSetIfChanged(ref _selectedArtwork, value);
         }
+        public ICommand OpenFileDialogCommand { get; }
+        public Interaction<Unit, IStorageFile?> OpenFileDialog { get; }
+
         private bool _isBusy;
         public bool IsBusy {
             get => _isBusy;
             set => this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
+        private string _printifyArtworksCount;
+        public string PrintifyArtworksCount {
+            get => _printifyArtworksCount;
+            set => this.RaiseAndSetIfChanged(ref _printifyArtworksCount, value);
+        } 
 
         private CancellationTokenSource? _cancellationTokenSource;
 
         public PrintifyArtworksPageViewModel() {
+            PrintifyArtworksCount = $"Printify Artworks: {PrintifyArtworks.Count}";
+            OpenFileDialog = new Interaction<Unit, IStorageFile?>();
+            OpenFileDialogCommand = ReactiveCommand.CreateFromTask(async () => {
+                var file = await OpenFileDialog.Handle(Unit.Default);
+                string filePath = file.TryGetLocalPath()!;
+                if (filePath is not null) {
+                    var newArtwork = await Artwork.UploadArtwork(filePath, Path.GetFileName(filePath));
+                }
+            });
             FetchArtworks();
         }
 
@@ -41,6 +64,8 @@ namespace TheMule.ViewModels
                 var vm = new PrintifyArtworkViewModel(artwork);
                 PrintifyArtworks.Add(vm);
             }
+
+            PrintifyArtworksCount = $"Printify Artworks: {PrintifyArtworks.Count}";
 
             if (!cancellationToken.IsCancellationRequested) {
                 LoadPreviewImages(cancellationToken);

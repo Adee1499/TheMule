@@ -1,4 +1,6 @@
 using Avalonia.Controls;
+using System.Diagnostics;
+using System.Threading;
 
 namespace TheMule.Views
 {
