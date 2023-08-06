@@ -2,6 +2,7 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
@@ -75,6 +76,59 @@ namespace TheMule.Services
             } else {
                 return "Error! " + response.ErrorMessage;
             }
+        }
+
+        internal static Task<bool> DeleteFile(string fileName) {
+
+            // AWS credentials setup
+            var options = new CredentialProfileOptions {
+                AccessKey = SettingsManager.appSettings.Cloudflare.Access_Key,
+                SecretKey = SettingsManager.appSettings.Cloudflare.Secret_Key
+            };
+
+            var profile = new CredentialProfile("default", options);
+            var sharedFile = new SharedCredentialsFile();
+            sharedFile.RegisterProfile(profile);
+
+            // Create the RestSharp client
+            string baseUrl = "https://28093bfdc7a0c50ad7147518bf3b319b.r2.cloudflarestorage.com/";
+            _client = new RestClient(baseUrl);
+
+            var request = new RestRequest($"pod-library/{fileName}", Method.Delete);
+            request.AddHeader("content-type", "text/plain");
+            request.AddHeader(AWS4SignerBase.X_Amz_Content_SHA256, AWS4SignerBase.EMPTY_BODY_SHA256);
+
+            var requestDateTime = DateTime.UtcNow;
+            var dateTimeStamp = requestDateTime.ToString(AWS4SignerBase.ISO8601BasicFormat, CultureInfo.InvariantCulture);
+
+            request.AddHeader(AWS4SignerBase.X_Amz_Date, dateTimeStamp);
+
+            var headers = new Dictionary<string, string>
+            {
+                { AWS4SignerBase.X_Amz_Content_SHA256, AWS4SignerBase.EMPTY_BODY_SHA256 },
+                { "content-type", "text/plain" }
+            };
+
+            var signer = new AWS4SignerForAuthorizationHeader {
+                EndpointUri = new Uri(baseUrl + request.Resource),
+                HttpMethod = "DELETE",
+                Service = "s3",
+                Region = "auto"
+            };
+
+            var authorization = signer.ComputeSignature(headers,
+                                                        "",   // no query parameters
+                                                        AWS4SignerBase.EMPTY_BODY_SHA256,
+                                                        options.AccessKey,
+                                                        options.SecretKey);
+
+            // place the computed signature into a formatted 'Authorization' header 
+            // and call S3
+            request.AddHeader("Authorization", authorization);
+            var response = _client.Execute(request);
+
+            Debug.WriteLine(response.Content);
+            return Task.FromResult(response.StatusCode == System.Net.HttpStatusCode.OK);
         }
     }
 }

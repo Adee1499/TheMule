@@ -95,11 +95,15 @@ namespace TheMule.Models.Printify
         public static async Task<Artwork> UploadArtwork(string filePath, string fileName)
         {
             string cloudflareResourceUrl = await CloudflareService.UploadFile(filePath, fileName);
-            if (cloudflareResourceUrl.StartsWith("Error")) return null;
+            if (cloudflareResourceUrl.StartsWith("Error")) return null!;
             Artwork newArtwork = new Artwork(fileName, cloudflareResourceUrl);
             bool result = await PrintifyService.UploadArtworkAsync(newArtwork);
-            if (!result) return null;
-            return newArtwork;
+            if (!result) {
+                return null!;
+            } else {
+                await CloudflareService.DeleteFile(fileName);
+                return newArtwork;
+            }
         }
     }
 
