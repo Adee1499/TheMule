@@ -3,6 +3,7 @@ using RestSharp.Authenticators.OAuth2;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TheMule.Models.Printify;
@@ -16,7 +17,7 @@ namespace TheMule.Services
 
         private static void InitializeRestClient() {
             SettingsManager.LoadSettings();
-            var authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(SettingsManager.appSettings.Printify.API_Key, "Bearer");
+            var authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(SettingsManager.appSettings.PrintifyService.API_Key, "Bearer");
 
             var options = new RestClientOptions("https://api.printify.com/v1/") {
                 Authenticator = authenticator
@@ -24,7 +25,7 @@ namespace TheMule.Services
 
             _client = new RestClient(options);
 
-            _shopId = SettingsManager.appSettings.Printify.Shop_Id;
+            _shopId = SettingsManager.appSettings.PrintifyService.Shop_Id;
         }
 
         public static async Task<List<Artwork>> GetArtworksAsync() {
@@ -108,6 +109,34 @@ namespace TheMule.Services
             }
 
             return productsData;
+        }
+
+        public static async Task<List<Blueprint>> GetBlueprintsAsync() {
+            if (_client == null) InitializeRestClient();
+
+            List<Blueprint> blueprintsData = new();
+
+            var response = await _client!.GetJsonAsync<Blueprint[]>("catalog/blueprints.json");
+
+            if (response != null) {
+                blueprintsData = response.ToList();                
+            }
+
+            return blueprintsData;
+        }
+
+        public static async Task<List<PrintProvider>> GetPrintProvidersAsync() {
+            if (_client == null) InitializeRestClient();
+
+            List<PrintProvider> printProvidersData = new();
+
+            var response = await _client!.GetJsonAsync<PrintProvider[]>("catalog/print_providers.json");
+
+            if (response != null) {
+                printProvidersData = response.ToList();
+            }
+
+            return printProvidersData;
         }
     }
 }

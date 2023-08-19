@@ -11,9 +11,11 @@
   <Application.Styles>
     <FluentTheme />
     <StyleInclude Source="avares://TheMule/Icons.axaml" />
+    <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
   </Application.Styles>
 
   <Application.Resources>
     <FontFamily x:Key="BarlowFont">avares://TheMule/Assets/Fonts#Barlow</FontFamily>
+    <Color x:Key="SystemAccentColor">#FFF27A</Color>
   </Application.Resources>
 </Application>

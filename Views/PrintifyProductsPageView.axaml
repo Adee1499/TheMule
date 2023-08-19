@@ -13,10 +13,23 @@
     </Style>
     <Style Selector="ListBoxItem:pointerover">
     </Style>
+    <Style Selector="Button:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#FFF27A" />
+      <Setter Property="Foreground" Value="#000000" />
+    </Style>
   </UserControl.Styles>
+  
   <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Height="55" Background="#161B22" Orientation="Horizontal">
+      <Panel Margin="45 0 45 0" Width="1020">
+        <Button Content="Create new" Margin="0 10 0 10" FontFamily="{StaticResource BarlowFont}"
+                FontSize="20" Foreground="#FFF27A" Background="#23292f" CornerRadius="10" Command="{Binding CreateNewProductCommand}"/>
+        <TextBlock Text="{Binding PrintifyProductsCount}" FontFamily="{StaticResource BarlowFont}" FontSize="18"
+                   VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFF27A"/>
+      </Panel>
+    </StackPanel>
     <ListBox ItemsSource="{Binding PrintifyProducts}" SelectedItem="{Binding SelectedProduct}"
-             Background="Transparent" Margin="10 35">
+             Background="Transparent" Margin="10 0 10 0">
       <ListBox.ItemsPanel>
         <ItemsPanelTemplate>
           <WrapPanel />

@@ -42,9 +42,10 @@ namespace TheMule.ViewModels
             OpenFileDialog = new Interaction<Unit, IStorageFile?>();
             OpenFileDialogCommand = ReactiveCommand.CreateFromTask(async () => {
                 var file = await OpenFileDialog.Handle(Unit.Default);
-                string filePath = file.TryGetLocalPath()!;
-                if (filePath is not null) {
+                if (file is not null) {
+                    string filePath = file.TryGetLocalPath()!;
                     var newArtwork = await Artwork.UploadArtwork(filePath, Path.GetFileName(filePath));
+                    FetchArtworks();
                 }
             });
             FetchArtworks();

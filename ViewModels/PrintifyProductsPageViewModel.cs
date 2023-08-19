@@ -1,13 +1,9 @@
-﻿using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
-using ReactiveUI;
-using System;
+﻿using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive;
+using System.Reactive.Linq;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Windows.Input;
 using TheMule.Models.Printify;
 using TheMule.Views;
 
@@ -21,15 +17,32 @@ namespace TheMule.ViewModels
             get => _selectedProduct;
             set => this.RaiseAndSetIfChanged(ref _selectedProduct, value);
         }
+        public Interaction<PrintifyProductNewWindowViewModel, PrintifyProductViewModel?> ShowNewProductDialog { get; }
+        public ICommand CreateNewProductCommand { get; }
+
         private bool _isBusy;
         public bool IsBusy {
             get => _isBusy;
             set => this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
+        private string _printifyProductsCount;
+        public string PrintifyProductsCount {
+            get => _printifyProductsCount;
+            set => this.RaiseAndSetIfChanged(ref _printifyProductsCount, value);
+        }
 
         private CancellationTokenSource? _cancellationTokenSource;
 
         public PrintifyProductsPageViewModel() {
+            PrintifyProductsCount = $"Printify Products: {PrintifyProducts.Count}";
+            ShowNewProductDialog = new Interaction<PrintifyProductNewWindowViewModel, PrintifyProductViewModel?>();
+
+            CreateNewProductCommand = ReactiveCommand.CreateFromTask(async () => {
+                var newProductDialog = new PrintifyProductNewWindowViewModel();
+
+                var result = await ShowNewProductDialog.Handle(newProductDialog);
+            });
+
             FetchProducts();
         }
 
@@ -47,6 +60,8 @@ namespace TheMule.ViewModels
                 var vm = new PrintifyProductViewModel(product);
                 PrintifyProducts.Add(vm);
             }
+
+            PrintifyProductsCount = $"Printify Products: {PrintifyProducts.Count}";
 
             if (!cancellationToken.IsCancellationRequested) {
                 LoadPreviewImages(cancellationToken);

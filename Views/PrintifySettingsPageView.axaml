@@ -2,13 +2,320 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:TheMule.ViewModels"
              mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="768"
              Width="1120" Height="768" Background="Transparent"
-             x:Class="TheMule.Views.PrintifySettingsPageView">
+             x:Class="TheMule.Views.PrintifySettingsPageView"
+             x:DataType="vm:PrintifySettingsPageViewModel">
   <DockPanel>
-    <StackPanel DockPanel.Dock="Top">
-      <TextBlock Text="Printify Settings" />
+    <StackPanel Margin="20 25 20 10">
+      <TextBlock Grid.Row="0" Text="Blueprint settings" FontFamily="{StaticResource BarlowFont}" 
+                 FontSize="16" Margin="0 0 0 10" />
+      <Line StartPoint="20, 0" EndPoint="1060, 0" Stroke="#23292f" />
+      <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" Margin="10 10 10 0">
+        <TextBlock Grid.Row="1" Text="Blueprint" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+        <ComboBox Grid.Row="3" Width="1050" PlaceholderText="Select a blueprint" PlaceholderForeground="#8b8c8e" SelectedItem="{Binding SelectedBlueprint}"
+                 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintifyBlueprints}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding ComboBoxText}" />
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>  
+      </Grid>
+      <Border CornerRadius="10" Width="1010" Height="466" 
+              Background="#161B22" BorderThickness="1" BorderBrush="#23292F">
+        <Panel>
+          <Line StartPoint="505,0" EndPoint="505,466" Stroke="#23292F" />
+          <Line StartPoint="0,233" EndPoint="1010,233" Stroke="#23292F" />
+          <Grid RowDefinitions="1*,1*" ColumnDefinitions="1*,1*">
+            <StackPanel Grid.Row="0" Grid.Column="0">
+              <TextBlock Text="United Kingdom" Margin="15 10 0 0"
+                         FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Print Provider:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
+                          SelectedItem="{Binding UKPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding ComboBoxText}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+              <Grid RowDefinitions="1*,1*,1*,1*,1*" ColumnDefinitions="1*,1*">
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Front placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10" 
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Front.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Front.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Front.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Front.Angle}" />
+                </StackPanel>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="Neck placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Neck.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Neck.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Neck.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding UKBlueprintSettings.Placeholders.Neck.Angle}" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+            <Line StartPoint="20,85" EndPoint="485,85" Stroke="#23292F" />
+            <StackPanel Grid.Row="0" Grid.Column="1">
+              <TextBlock Text="Europe" Margin="15 10 0 0"
+                         FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Print Provider:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
+                          SelectedItem="{Binding EUPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding ComboBoxText}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+              <Grid RowDefinitions="1*,1*,1*,1*,1*" ColumnDefinitions="1*,1*">
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Front placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Front.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Front.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Front.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Front.Angle}" />
+                </StackPanel>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="Neck placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Neck.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Neck.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Neck.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding EUBlueprintSettings.Placeholders.Neck.Angle}" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+            <Line StartPoint="525,85" EndPoint="990,85" Stroke="#23292F" />
+            <StackPanel Grid.Row="1" Grid.Column="0">
+              <TextBlock Text="Americas" Margin="15 10 0 0"
+                         FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Print Provider:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
+                          SelectedItem="{Binding USPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding ComboBoxText}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+              <Grid RowDefinitions="1*,1*,1*,1*,1*" ColumnDefinitions="1*,1*">
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Front placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Front.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Front.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Front.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Front.Angle}" />
+                </StackPanel>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="Neck placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Neck.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Neck.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Neck.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding USBlueprintSettings.Placeholders.Neck.Angle}" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+            <Line StartPoint="20,318" EndPoint="485,318" Stroke="#23292F" />
+            <StackPanel Grid.Row="1" Grid.Column="1">
+              <TextBlock Text="Oceania" Margin="15 10 0 0"
+                         FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Print Provider:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
+                          SelectedItem="{Binding AUPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                  <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                      <TextBlock Text="{Binding ComboBoxText}" />
+                    </DataTemplate>
+                  </ComboBox.ItemTemplate>
+                </ComboBox>
+              </StackPanel>
+              <Grid RowDefinitions="1*,1*,1*,1*,1*" ColumnDefinitions="1*,1*">
+                <TextBlock Grid.Column="0" Grid.Row="0" Text="Front placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Front.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Front.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Front.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Front.Angle}" />
+                </StackPanel>
+                <TextBlock Grid.Column="1" Grid.Row="0" Text="Neck placeholder:" Margin="15 15 0 0"
+                           FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+                  <TextBlock Text="X:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="X coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Neck.X}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+                  <TextBlock Text="Y:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="70 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Y coord (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Neck.Y}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
+                  <TextBlock Text="Scale:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Scale (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Neck.Scale}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4">
+                  <TextBlock Text="Angle:" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+                             Margin="40 6 0 0" TextAlignment="Right" />
+                  <TextBox Watermark="Angle (float)" MinHeight="10" FontSize="10"
+                           Margin="10 5 0 0" Width="140" Text="{Binding AUBlueprintSettings.Placeholders.Neck.Angle}" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+            <Line StartPoint="525,318" EndPoint="990,318" Stroke="#23292F" />
+          </Grid>
+        </Panel>
+      </Border>
     </StackPanel>
-    <ListBox Background="Transparent"/>
   </DockPanel>
 </UserControl>
