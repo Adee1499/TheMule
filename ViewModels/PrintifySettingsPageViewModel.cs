@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using DynamicData.Binding;
+using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -31,6 +32,17 @@ namespace TheMule.ViewModels
                     USPrintProvider = PrintProviders.Where(pp => pp.Id.Equals(USBlueprintSettings!.PrintProviderId)).First();
                     AUBlueprintSettings = blueprintSettings.AU;
                     AUPrintProvider = PrintProviders.Where(pp => pp.Id.Equals(AUBlueprintSettings!.PrintProviderId)).First();
+                } else {
+                    BlueprintSettings blueprintSettings = new BlueprintSettings();
+                    SettingsManager.appSettings.Printify.Blueprints.Add(_selectedBlueprint.Id, blueprintSettings);
+                    UKBlueprintSettings = blueprintSettings.UK;
+                    UKPrintProvider = null;
+                    EUBlueprintSettings = blueprintSettings.EU;
+                    EUPrintProvider = null;
+                    USBlueprintSettings = blueprintSettings.US;
+                    USPrintProvider = null;
+                    AUBlueprintSettings = blueprintSettings.AU;
+                    AUPrintProvider = null;
                 }
             }
         }
@@ -53,6 +65,8 @@ namespace TheMule.ViewModels
             set {
                 this.RaiseAndSetIfChanged(ref _euPrintProvider, value);
                 EUBlueprintSettings!.PrintProviderId = _euPrintProvider!.Id;
+                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU = _euBlueprintSettings!;
+                SettingsManager.SaveSettings();
             }
         }
         public PrintProvider? USPrintProvider {
@@ -60,6 +74,8 @@ namespace TheMule.ViewModels
             set {
                 this.RaiseAndSetIfChanged(ref _usPrintProvider, value);
                 USBlueprintSettings!.PrintProviderId = _usPrintProvider!.Id;
+                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].US = _usBlueprintSettings!;
+                SettingsManager.SaveSettings();
             }
         }
         public PrintProvider? AUPrintProvider {
@@ -67,6 +83,8 @@ namespace TheMule.ViewModels
             set {
                 this.RaiseAndSetIfChanged(ref _auPrintProvider, value);
                 AUBlueprintSettings!.PrintProviderId = _auPrintProvider!.Id;
+                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU = _auBlueprintSettings!;
+                SettingsManager.SaveSettings();
             }
         }
 
@@ -86,30 +104,24 @@ namespace TheMule.ViewModels
             get => _euBlueprintSettings;
             set {
                 this.RaiseAndSetIfChanged(ref _euBlueprintSettings, value);
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU = _euBlueprintSettings!;
-                SettingsManager.SaveSettings();
             }
         }
         public BlueprintPrintProviderSettings? USBlueprintSettings {
             get => _usBlueprintSettings;
             set {
                 this.RaiseAndSetIfChanged(ref _usBlueprintSettings, value);
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].US = _usBlueprintSettings!;
-                SettingsManager.SaveSettings();
             }
         }
         public BlueprintPrintProviderSettings? AUBlueprintSettings {
             get => _auBlueprintSettings;
             set {
                 this.RaiseAndSetIfChanged(ref _auBlueprintSettings, value);
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU = _auBlueprintSettings!;
-                SettingsManager.SaveSettings();
             }
         }
 
         public PrintifySettingsPageViewModel() {
             FetchBlueprints();
-            FetchPrintProviders();    
+            FetchPrintProviders();
         }
 
         private async void FetchBlueprints() {

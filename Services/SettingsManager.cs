@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ReactiveUI;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace TheMule.Services
 {
@@ -20,6 +21,7 @@ namespace TheMule.Services
                 Directory.CreateDirectory(settingsDirectory);
 
             var serializedSettings = JsonSerializer.Serialize(appSettings, new JsonSerializerOptions { WriteIndented = true });
+            serializedSettings = CleanUpSerializedReactiveObjectHack(serializedSettings);
             File.WriteAllText(_settingsFilePath, serializedSettings);
         }
 
@@ -28,6 +30,12 @@ namespace TheMule.Services
 
             var serializedSettings = File.ReadAllText(_settingsFilePath);
             appSettings = JsonSerializer.Deserialize<AppSettings>(serializedSettings);
+        }
+
+        private static string CleanUpSerializedReactiveObjectHack(string json) {
+            json = Regex.Replace(json, @"\s*""(Changing|Changed|ThrownExceptions)"":\s*\{},?\n?", string.Empty);
+            json = Regex.Replace(json, @",(\s*})", "$1");
+            return json;
         }
     }
 
@@ -39,14 +47,14 @@ namespace TheMule.Services
 
         public class PrintifyServiceSettings
         {
-            public string API_Key { get; set; }
-            public string Shop_Id { get; set; }
+            public string APIKey { get; set; }
+            public string ShopId { get; set; }
         }
 
         public class CloudflareSettings 
         {
-            public string Access_Key { get; set; }
-            public string Secret_Key { get; set; }
+            public string AccessKey { get; set; }
+            public string SecretKey { get; set; }
             public string PublicUrl { get; set; }
         }
 
@@ -63,24 +71,85 @@ namespace TheMule.Services
             public BlueprintPrintProviderSettings AU { get; set; }
         }
 
-        public class BlueprintPrintProviderSettings 
+        public class BlueprintPrintProviderSettings : ReactiveObject
         {
-            public int PrintProviderId { get; set; }
-            public PlaceholdersKey Placeholders { get; set; }
+            private int _printProviderId;
+            public int PrintProviderId {
+                get => _printProviderId;
+                set {
+                    this.RaiseAndSetIfChanged(ref _printProviderId, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+
+            private PlaceholdersKey _placeholders;
+            public PlaceholdersKey Placeholders {
+                get => _placeholders;
+                set {
+                    this.RaiseAndSetIfChanged(ref _placeholders, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
         }
 
-        public class PlaceholdersKey 
+        public class PlaceholdersKey : ReactiveObject
         {
-            public PlaceholderSettings Front { get; set; }
-            public PlaceholderSettings Neck { get; set; }
+            private PlaceholderSettings _front;
+            public PlaceholderSettings Front {
+                get => _front;
+                set {
+                    this.RaiseAndSetIfChanged(ref _front, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+
+            private PlaceholderSettings _neck;
+            public PlaceholderSettings Neck {
+                get => _neck;
+                set {
+                    this.RaiseAndSetIfChanged(ref _neck, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
         }
 
-        public class PlaceholderSettings 
+        public class PlaceholderSettings : ReactiveObject
         {
-            public float X { get; set; }
-            public float Y { get; set; }
-            public float Scale { get; set; }
-            public float Angle { get; set; }
+            private float _x;
+            public float X {
+                get => _x;
+                set {
+                    this.RaiseAndSetIfChanged(ref _x, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+
+            private float _y;
+            public float Y {
+                get => _y;
+                set {
+                    this.RaiseAndSetIfChanged(ref _y, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+
+            private float _scale;
+            public float Scale {
+                get => _scale;
+                set {
+                    this.RaiseAndSetIfChanged(ref _scale, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+
+            private float _angle;
+            public float Angle {
+                get => _angle;
+                set {
+                    this.RaiseAndSetIfChanged(ref _angle, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
         }
     }
 }

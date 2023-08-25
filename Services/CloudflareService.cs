@@ -20,8 +20,8 @@ namespace TheMule.Services
 
             // AWS credentials setup
             var options = new CredentialProfileOptions {
-                AccessKey = SettingsManager.appSettings.CloudflareService.Access_Key,
-                SecretKey = SettingsManager.appSettings.CloudflareService.Secret_Key
+                AccessKey = SettingsManager.appSettings.CloudflareService.AccessKey,
+                SecretKey = SettingsManager.appSettings.CloudflareService.SecretKey
             };
 
             var profile = new CredentialProfile("default", options);
@@ -82,8 +82,8 @@ namespace TheMule.Services
 
             // AWS credentials setup
             var options = new CredentialProfileOptions {
-                AccessKey = SettingsManager.appSettings.CloudflareService.Access_Key,
-                SecretKey = SettingsManager.appSettings.CloudflareService.Secret_Key
+                AccessKey = SettingsManager.appSettings.CloudflareService.AccessKey,
+                SecretKey = SettingsManager.appSettings.CloudflareService.SecretKey
             };
 
             var profile = new CredentialProfile("default", options);
