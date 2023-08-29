@@ -69,6 +69,33 @@ namespace TheMule.Services
             public BlueprintPrintProviderSettings EU { get; set; }
             public BlueprintPrintProviderSettings US { get; set; }
             public BlueprintPrintProviderSettings AU { get; set; }
+
+            public BlueprintSettings() {
+                UK = new BlueprintPrintProviderSettings {
+                    PrintProviderId = 0, Placeholders = new PlaceholdersKey {
+                        Front = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 },
+                        Neck = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 }
+                    }
+                };
+                EU = new BlueprintPrintProviderSettings {
+                    PrintProviderId = 0, Placeholders = new PlaceholdersKey {
+                        Front = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 },
+                        Neck = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 }
+                    }
+                };
+                US = new BlueprintPrintProviderSettings {
+                    PrintProviderId = 0, Placeholders = new PlaceholdersKey {
+                        Front = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 },
+                        Neck = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 }
+                    }
+                };
+                AU = new BlueprintPrintProviderSettings {
+                    PrintProviderId = 0, Placeholders = new PlaceholdersKey {
+                        Front = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 },
+                        Neck = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 }
+                    }
+                };
+            }
         }
 
         public class BlueprintPrintProviderSettings : ReactiveObject

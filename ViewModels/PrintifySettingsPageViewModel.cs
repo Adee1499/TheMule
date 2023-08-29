@@ -20,7 +20,6 @@ namespace TheMule.ViewModels
             set {
                 this.RaiseAndSetIfChanged(ref _selectedBlueprint, value);
                 // Grab settings for the selected blueprint
-                Debug.WriteLine($"{_selectedBlueprint.Brand}-{_selectedBlueprint.Model}");
                 SettingsManager.LoadSettings();
                 if (SettingsManager.appSettings.Printify.Blueprints.ContainsKey(_selectedBlueprint.Id)) {
                     BlueprintSettings blueprintSettings = SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint.Id];
@@ -36,13 +35,13 @@ namespace TheMule.ViewModels
                     BlueprintSettings blueprintSettings = new BlueprintSettings();
                     SettingsManager.appSettings.Printify.Blueprints.Add(_selectedBlueprint.Id, blueprintSettings);
                     UKBlueprintSettings = blueprintSettings.UK;
-                    UKPrintProvider = null;
+                    UKPrintProvider = PrintProviders.Where(pp => pp.Id.Equals(0)).First();
                     EUBlueprintSettings = blueprintSettings.EU;
-                    EUPrintProvider = null;
+                    EUPrintProvider = PrintProviders.Where(pp => pp.Id.Equals(0)).First();
                     USBlueprintSettings = blueprintSettings.US;
-                    USPrintProvider = null;
+                    USPrintProvider = PrintProviders.Where(pp => pp.Id.Equals(0)).First();
                     AUBlueprintSettings = blueprintSettings.AU;
-                    AUPrintProvider = null;
+                    AUPrintProvider = PrintProviders.Where(pp => pp.Id.Equals(0)).First();
                 }
             }
         }
@@ -136,6 +135,13 @@ namespace TheMule.ViewModels
 
         private async void FetchPrintProviders() {
             PrintProviders.Clear();
+
+            // Add a blank entry
+            PrintProviders.Add(new PrintProvider(
+                0,
+                "No provider selected",
+                new PrintProviderLocation()
+            ));
 
             var printProviders = await PrintProvider.GetPrintProvidersAsync();
 
