@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace TheMule.Views.Shopify
 {
-    public partial class ShopifyOrdersPageView : UserControl
+    public partial class SettingsPageView : UserControl
     {
-        public ShopifyOrdersPageView() {
+        public SettingsPageView() {
             InitializeComponent();
         }
     }

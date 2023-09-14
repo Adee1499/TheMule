@@ -8,10 +8,10 @@ using TheMule.ViewModels.Printify;
 
 namespace TheMule.Views.Printify
 {
-    public partial class PrintifyArtworksPageView : ReactiveUserControl<PrintifyArtworksPageViewModel>
+    public partial class ArtworksPageView : ReactiveUserControl<ArtworksPageViewModel>
     {
-        public PrintifyArtworksPageView() {
-            DataContext = new PrintifyArtworksPageViewModel();
+        public ArtworksPageView() {
+            DataContext = new ArtworksPageViewModel();
             InitializeComponent();
             this.WhenActivated(action => action(ViewModel!.OpenFileDialog.RegisterHandler(OpenFileDialogAsync!)));
         }

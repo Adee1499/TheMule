@@ -5,8 +5,8 @@
              xmlns:vm="using:TheMule.ViewModels.Printify"
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="240"
              Width="200" Background="Transparent"
-             x:Class="TheMule.Views.Printify.PrintifyArtworkView"
-             x:DataType="vm:PrintifyArtworkViewModel">
+             x:Class="TheMule.Views.Printify.ArtworkView"
+             x:DataType="vm:ArtworkViewModel">
   <StackPanel Spacing="5" Width="200">
     <StackPanel.ContextMenu>
       <ContextMenu>

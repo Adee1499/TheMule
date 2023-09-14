@@ -7,21 +7,21 @@ using TheMule.ViewModels.Printify;
 
 namespace TheMule.Views.Printify
 {
-    public partial class PrintifyProductsPageView : ReactiveUserControl<PrintifyProductsPageViewModel>
+    public partial class ProductsPageView : ReactiveUserControl<ProductsPageViewModel>
     {
-        public PrintifyProductsPageView() {
-            DataContext = new PrintifyProductsPageViewModel();
+        public ProductsPageView() {
+            DataContext = new ProductsPageViewModel();
             InitializeComponent();
             this.WhenActivated(action => action(ViewModel!.ShowNewProductDialog.RegisterHandler(DoShowNewProductDialog)));
         }
 
-        private async Task DoShowNewProductDialog(InteractionContext<PrintifyNewProductWindowViewModel, PrintifyProductViewModel?> interaction) {
+        private async Task DoShowNewProductDialog(InteractionContext<NewProductWindowViewModel, ProductViewModel?> interaction) {
             var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
 
-            var dialog = new PrintifyProductNewWindow();
+            var dialog = new NewProductWindow();
             dialog.DataContext = interaction.Input;
 
-            var result = await dialog.ShowDialog<PrintifyProductViewModel?>(mainWindow!);
+            var result = await dialog.ShowDialog<ProductViewModel?>(mainWindow!);
             interaction.SetOutput(result);
         }
     }

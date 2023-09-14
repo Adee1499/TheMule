@@ -5,8 +5,8 @@
              xmlns:vm="using:TheMule.ViewModels.Printify"
              mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="768"
              Width="1120" Height="768" Background="Transparent"
-             x:Class="TheMule.Views.Printify.PrintifyProductsPageView"
-             x:DataType="vm:PrintifyProductsPageViewModel">
+             x:Class="TheMule.Views.Printify.ProductsPageView"
+             x:DataType="vm:ProductsPageViewModel">
   <UserControl.Styles>
     <Style Selector="ListBoxItem">
       <Setter Property="Margin" Value="25,25" />
@@ -20,13 +20,16 @@
   </UserControl.Styles>
   
   <DockPanel>
-    <StackPanel DockPanel.Dock="Top" Height="55" Background="#161B22" Orientation="Horizontal">
-      <Panel Margin="45 0 45 0" Width="1020">
-        <Button Content="Create new" Margin="0 10 0 10" FontFamily="{StaticResource BarlowFont}"
-                FontSize="20" Foreground="#FFF27A" Background="#23292f" CornerRadius="10" Command="{Binding CreateNewProductCommand}"/>
-        <TextBlock Text="{Binding PrintifyProductsCount}" FontFamily="{StaticResource BarlowFont}" FontSize="18"
-                   VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFF27A"/>
-      </Panel>
+    <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+      <StackPanel DockPanel.Dock="Top" Height="55" Background="#161B22" Orientation="Horizontal">
+        <Panel Margin="45 0 45 0" Width="1020">
+          <Button Content="Create new" Margin="0 10 0 10" FontFamily="{StaticResource BarlowFont}"
+                  FontSize="20" Foreground="#FFF27A" Background="#23292f" CornerRadius="10" Command="{Binding CreateNewProductCommand}"/>
+          <TextBlock Text="{Binding PrintifyProductsCount}" FontFamily="{StaticResource BarlowFont}" FontSize="18"
+                     VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#FFF27A"/>
+        </Panel>
+      </StackPanel>
+      <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" />
     </StackPanel>
     <ListBox ItemsSource="{Binding PrintifyProducts}" SelectedItem="{Binding SelectedProduct}"
              Background="Transparent" Margin="10 0 10 0">

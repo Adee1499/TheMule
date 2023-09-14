@@ -25,4 +25,17 @@
     <PackageReference Include="AWSSDK.S3" Version="3.7.201.8" />
     <PackageReference Include="RestSharp" Version="110.2.0" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="Views\Shopify\OrdersPageView.axaml.cs">
+      <DependentUpon>OrdersPageView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Shopify\ProductsPageView.axaml.cs">
+      <DependentUpon>ProductsPageView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Shopify\SettingsPageView.axaml.cs">
+      <DependentUpon>SettingsPageView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

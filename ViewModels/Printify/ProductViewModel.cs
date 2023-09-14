@@ -5,11 +5,11 @@ using TheMule.Models.Printify;
 
 namespace TheMule.ViewModels.Printify
 {
-    public class PrintifyProductViewModel : ViewModelBase
+    public class ProductViewModel : ViewModelBase
     {
         private readonly Product _printifyProduct;
 
-        public PrintifyProductViewModel(Product printifyProduct)
+        public ProductViewModel(Product printifyProduct)
         {
             _printifyProduct = printifyProduct;
         }

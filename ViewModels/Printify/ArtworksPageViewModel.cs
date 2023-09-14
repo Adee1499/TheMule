@@ -12,11 +12,11 @@ using TheMule.Views.Printify;
 
 namespace TheMule.ViewModels.Printify
 {
-    public class PrintifyArtworksPageViewModel : ViewModelBase
+    public class ArtworksPageViewModel : ViewModelBase
     {
-        private PrintifyArtworkView? _selectedArtwork;
-        public ObservableCollection<PrintifyArtworkViewModel> PrintifyArtworks { get; } = new();
-        public PrintifyArtworkView? SelectedArtwork
+        private ArtworkView? _selectedArtwork;
+        public ObservableCollection<ArtworkViewModel> PrintifyArtworks { get; } = new();
+        public ArtworkView? SelectedArtwork
         {
             get => _selectedArtwork;
             set => this.RaiseAndSetIfChanged(ref _selectedArtwork, value);
@@ -39,7 +39,7 @@ namespace TheMule.ViewModels.Printify
 
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public PrintifyArtworksPageViewModel()
+        public ArtworksPageViewModel()
         {
             PrintifyArtworksCount = $"Printify Artworks: {PrintifyArtworks.Count}";
             OpenFileDialog = new Interaction<Unit, IStorageFile?>();
@@ -69,7 +69,7 @@ namespace TheMule.ViewModels.Printify
 
             foreach (var artwork in artworks)
             {
-                var vm = new PrintifyArtworkViewModel(artwork);
+                var vm = new ArtworkViewModel(artwork);
                 PrintifyArtworks.Add(vm);
             }
 

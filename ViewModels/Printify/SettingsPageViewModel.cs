@@ -7,7 +7,7 @@ using static TheMule.Services.AppSettings;
 
 namespace TheMule.ViewModels.Printify
 {
-    public class PrintifySettingsPageViewModel : ViewModelBase
+    public class SettingsPageViewModel : ViewModelBase
     {
         // Blueprint settings
         public ObservableCollection<Blueprint> PrintifyBlueprints { get; } = new();
@@ -137,7 +137,7 @@ namespace TheMule.ViewModels.Printify
             }
         }
 
-        public PrintifySettingsPageViewModel()
+        public SettingsPageViewModel()
         {
             FetchBlueprints();
             FetchPrintProviders();

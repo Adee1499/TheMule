@@ -8,7 +8,7 @@ using TheMule.Services;
 
 namespace TheMule.ViewModels.Printify
 {
-    public class PrintifyNewProductWindowViewModel : ViewModelBase
+    public class NewProductWindowViewModel : ViewModelBase
     {
         private Blueprint? _selectedBlueprint;
         public ObservableCollection<Blueprint> PrintifyBlueprints { get; } = new();
@@ -35,7 +35,7 @@ namespace TheMule.ViewModels.Printify
 
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public PrintifyNewProductWindowViewModel()
+        public NewProductWindowViewModel()
         {
             FetchBlueprints();
         }

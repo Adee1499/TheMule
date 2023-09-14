@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:TheMule.ViewModels.Printify"
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="270"
-             x:Class="TheMule.Views.Printify.PrintifyProductView"
-             x:DataType="vm:PrintifyProductViewModel">
+             x:Class="TheMule.Views.Printify.ProductView"
+             x:DataType="vm:ProductViewModel">
   <StackPanel Spacing="5" Width="200">
     <Border CornerRadius="10" ClipToBounds="True" ToolTip.Placement="Pointer">
       <ToolTip.Tip>

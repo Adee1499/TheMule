@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace TheMule.Views.Printify
 {
-    public partial class PrintifyProductNewWindow : Window
+    public partial class OrdersPageView : UserControl
     {
-        public PrintifyProductNewWindow() {
+        public OrdersPageView() {
             InitializeComponent();
         }
     }

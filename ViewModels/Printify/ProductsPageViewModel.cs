@@ -9,16 +9,16 @@ using TheMule.Views.Printify;
 
 namespace TheMule.ViewModels.Printify
 {
-    public class PrintifyProductsPageViewModel : ViewModelBase
+    public class ProductsPageViewModel : ViewModelBase
     {
-        private PrintifyProductView? _selectedProduct;
-        public ObservableCollection<PrintifyProductViewModel> PrintifyProducts { get; } = new();
-        public PrintifyProductView? SelectedProduct
+        private ProductView? _selectedProduct;
+        public ObservableCollection<ProductViewModel> PrintifyProducts { get; } = new();
+        public ProductView? SelectedProduct
         {
             get => _selectedProduct;
             set => this.RaiseAndSetIfChanged(ref _selectedProduct, value);
         }
-        public Interaction<PrintifyNewProductWindowViewModel, PrintifyProductViewModel?> ShowNewProductDialog { get; }
+        public Interaction<NewProductWindowViewModel, ProductViewModel?> ShowNewProductDialog { get; }
         public ICommand CreateNewProductCommand { get; }
 
         private bool _isBusy;
@@ -36,14 +36,14 @@ namespace TheMule.ViewModels.Printify
 
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public PrintifyProductsPageViewModel()
+        public ProductsPageViewModel()
         {
             PrintifyProductsCount = $"Printify Products: {PrintifyProducts.Count}";
-            ShowNewProductDialog = new Interaction<PrintifyNewProductWindowViewModel, PrintifyProductViewModel?>();
+            ShowNewProductDialog = new Interaction<NewProductWindowViewModel, ProductViewModel?>();
 
             CreateNewProductCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                var newProductDialog = new PrintifyNewProductWindowViewModel();
+                var newProductDialog = new NewProductWindowViewModel();
 
                 var result = await ShowNewProductDialog.Handle(newProductDialog);
             });
@@ -64,7 +64,7 @@ namespace TheMule.ViewModels.Printify
 
             foreach (var product in products)
             {
-                var vm = new PrintifyProductViewModel(product);
+                var vm = new ProductViewModel(product);
                 PrintifyProducts.Add(vm);
             }
 

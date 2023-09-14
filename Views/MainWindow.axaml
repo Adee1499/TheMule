@@ -99,13 +99,13 @@
     </StackPanel>
     <Panel Width="1120" HorizontalAlignment="Right">
       <TabControl Name="tabControl_pages">
-        <printify:PrintifyArtworksPageView Name="page_printifyArtworks"/>
-        <printify:PrintifyProductsPageView Name="page_printifyProducts" />
-        <printify:PrintifyOrdersPageView Name="page_printifyOrders" />
-        <printify:PrintifySettingsPageView Name="page_printifySettings" />
-        <shopify:ShopifyProductsPageView Name="page_shopifyProducts" />
-        <shopify:ShopifyOrdersPageView Name="page_shopifyOrders" />
-        <shopify:ShopifySettingsPageView Name="page_shopifySettings" />
+        <printify:ArtworksPageView Name="page_printifyArtworks"/>
+        <printify:ProductsPageView Name="page_printifyProducts" />
+        <printify:OrdersPageView Name="page_printifyOrders" />
+        <printify:SettingsPageView Name="page_printifySettings" />
+        <shopify:ProductsPageView Name="page_shopifyProducts" />
+        <shopify:OrdersPageView Name="page_shopifyOrders" />
+        <shopify:SettingsPageView Name="page_shopifySettings" />
       </TabControl>
     </Panel>
   </Panel>

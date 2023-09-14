@@ -4,10 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="768"
              Width="1120" Height="768" Background="Transparent"
-             x:Class="TheMule.Views.Shopify.ShopifyOrdersPageView">
+             x:Class="TheMule.Views.Shopify.ProductsPageView">
   <DockPanel>
     <StackPanel DockPanel.Dock="Top">
-      <TextBlock Text="Shopify Orders" />
+      <TextBlock Text="Shopify Products" />
     </StackPanel>
     <ListBox Background="Transparent"/>
   </DockPanel>

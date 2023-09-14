@@ -5,8 +5,8 @@
              xmlns:vm="using:TheMule.ViewModels.Printify"
              mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="768"
              Width="1120" Height="768" Background="Transparent"
-             x:Class="TheMule.Views.Printify.PrintifySettingsPageView"
-             x:DataType="vm:PrintifySettingsPageViewModel">
+             x:Class="TheMule.Views.Printify.SettingsPageView"
+             x:DataType="vm:SettingsPageViewModel">
   <DockPanel>
     <StackPanel Margin="20 25 20 10">
       <TextBlock Grid.Row="0" Text="Blueprint settings" FontFamily="{StaticResource BarlowFont}" 

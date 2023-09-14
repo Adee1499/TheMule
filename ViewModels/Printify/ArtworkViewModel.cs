@@ -8,14 +8,14 @@ using TheMule.Models.Printify;
 
 namespace TheMule.ViewModels.Printify
 {
-    public class PrintifyArtworkViewModel : ViewModelBase
+    public class ArtworkViewModel : ViewModelBase
     {
         private readonly Artwork _printifyArtwork;
         private readonly ObservableAsPropertyHelper<bool> _artworkArchived;
         public ReactiveCommand<Unit, bool> ArchiveCommand { get; }
         public bool ArtworkArchived => _artworkArchived.Value;
 
-        public PrintifyArtworkViewModel(Artwork printifyArtwork)
+        public ArtworkViewModel(Artwork printifyArtwork)
         {
             _printifyArtwork = printifyArtwork;
             ArchiveCommand = ReactiveCommand.CreateFromTask(ArchiveArtworkAsync);
