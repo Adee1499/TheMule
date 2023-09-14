@@ -5,40 +5,45 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Input;
 using TheMule.Models.Printify;
-using TheMule.Views;
+using TheMule.Views.Printify;
 
-namespace TheMule.ViewModels
+namespace TheMule.ViewModels.Printify
 {
     public class PrintifyProductsPageViewModel : ViewModelBase
     {
         private PrintifyProductView? _selectedProduct;
         public ObservableCollection<PrintifyProductViewModel> PrintifyProducts { get; } = new();
-        public PrintifyProductView? SelectedProduct {
+        public PrintifyProductView? SelectedProduct
+        {
             get => _selectedProduct;
             set => this.RaiseAndSetIfChanged(ref _selectedProduct, value);
         }
-        public Interaction<PrintifyProductNewWindowViewModel, PrintifyProductViewModel?> ShowNewProductDialog { get; }
+        public Interaction<PrintifyNewProductWindowViewModel, PrintifyProductViewModel?> ShowNewProductDialog { get; }
         public ICommand CreateNewProductCommand { get; }
 
         private bool _isBusy;
-        public bool IsBusy {
+        public bool IsBusy
+        {
             get => _isBusy;
             set => this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
         private string _printifyProductsCount;
-        public string PrintifyProductsCount {
+        public string PrintifyProductsCount
+        {
             get => _printifyProductsCount;
             set => this.RaiseAndSetIfChanged(ref _printifyProductsCount, value);
         }
 
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public PrintifyProductsPageViewModel() {
+        public PrintifyProductsPageViewModel()
+        {
             PrintifyProductsCount = $"Printify Products: {PrintifyProducts.Count}";
-            ShowNewProductDialog = new Interaction<PrintifyProductNewWindowViewModel, PrintifyProductViewModel?>();
+            ShowNewProductDialog = new Interaction<PrintifyNewProductWindowViewModel, PrintifyProductViewModel?>();
 
-            CreateNewProductCommand = ReactiveCommand.CreateFromTask(async () => {
-                var newProductDialog = new PrintifyProductNewWindowViewModel();
+            CreateNewProductCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var newProductDialog = new PrintifyNewProductWindowViewModel();
 
                 var result = await ShowNewProductDialog.Handle(newProductDialog);
             });
@@ -46,7 +51,8 @@ namespace TheMule.ViewModels
             FetchProducts();
         }
 
-        private async void FetchProducts() {
+        private async void FetchProducts()
+        {
             IsBusy = true;
             PrintifyProducts.Clear();
 
@@ -56,25 +62,30 @@ namespace TheMule.ViewModels
 
             var products = await Product.GetProductsAsync();
 
-            foreach (var product in products) {
+            foreach (var product in products)
+            {
                 var vm = new PrintifyProductViewModel(product);
                 PrintifyProducts.Add(vm);
             }
 
             PrintifyProductsCount = $"Printify Products: {PrintifyProducts.Count}";
 
-            if (!cancellationToken.IsCancellationRequested) {
+            if (!cancellationToken.IsCancellationRequested)
+            {
                 LoadPreviewImages(cancellationToken);
             }
 
             IsBusy = false;
         }
 
-        private async void LoadPreviewImages(CancellationToken cancellationToken) {
-            foreach (var product in PrintifyProducts.ToList()) {
+        private async void LoadPreviewImages(CancellationToken cancellationToken)
+        {
+            foreach (var product in PrintifyProducts.ToList())
+            {
                 await product.LoadPreview();
 
-                if (cancellationToken.IsCancellationRequested) {
+                if (cancellationToken.IsCancellationRequested)
+                {
                     return;
                 }
             }

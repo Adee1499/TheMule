@@ -1,12 +1,12 @@
 ﻿using RestSharp;
 using RestSharp.Authenticators.OAuth2;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TheMule.Models.Printify;
+using static TheMule.Models.Printify.Blueprint;
 
 namespace TheMule.Services
 {
@@ -137,6 +137,20 @@ namespace TheMule.Services
             }
 
             return printProvidersData;
+        }
+
+        public static async Task<List<BlueprintVariant>> GetVariantsAsync(int blueprintId, int printProviderId) {
+            if (_client == null) InitializeRestClient();
+
+            List<BlueprintVariant> variantsData = new();
+
+            var response = await _client!.GetJsonAsync<BlueprintVariantsResponse>($"catalog/blueprints/{blueprintId}/print_providers/{printProviderId}/variants.json");
+
+            if (response != null) {
+                variantsData = response.Variants.ToList();
+            }
+
+            return variantsData;
         }
     }
 }

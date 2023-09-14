@@ -86,11 +86,11 @@ namespace TheMule.Models.Printify
         }
 
         private static HttpClient s_httpClient = new();
-        private string CachePath => $"./Cache/{Id}";
+        private string CachePath => $"{SettingsManager.CachePath}/{Id}";
 
         public async Task<Stream> LoadPreviewImageAsync() {
-            if (File.Exists($"{CachePath}-{Title}")) {
-                return File.OpenRead($"{CachePath}-{Title}");
+            if (File.Exists($"{CachePath}-{Title}.png")) {
+                return File.OpenRead($"{CachePath}-{Title}.png");
             } else {
                 var data = await s_httpClient.GetByteArrayAsync(Images[0].Url);
                 return new MemoryStream(data);
@@ -98,11 +98,11 @@ namespace TheMule.Models.Printify
         }
 
         public Stream SavePreviewImageStream() {
-            if (!Directory.Exists("./Cache")) {
-                Directory.CreateDirectory("./Cache");
+            if (!Directory.Exists($"{SettingsManager.CachePath}")) {
+                Directory.CreateDirectory($"{SettingsManager.CachePath}");
             }
 
-            return File.OpenWrite($"{CachePath}-{Title}");
+            return File.OpenWrite($"{CachePath}-{Title}.png");
         }
 
 

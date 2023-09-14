@@ -62,7 +62,7 @@ namespace TheMule.Models.Printify
         }
 
         private static HttpClient s_httpClient = new();
-        private string CachePath => $"./Cache/{Id}";
+        private string CachePath => $"{SettingsManager.CachePath}/{Id}";
 
         public async Task<Stream> LoadPreviewImageAsync()
         {
@@ -79,9 +79,9 @@ namespace TheMule.Models.Printify
 
         public Stream SavePreviewImageStream()
         {
-            if (!Directory.Exists("./Cache"))
+            if (!Directory.Exists($"{SettingsManager.CachePath}"))
             {
-                Directory.CreateDirectory("./Cache");
+                Directory.CreateDirectory($"{SettingsManager.CachePath}");
             }
 
             return File.OpenWrite($"{CachePath}-{FileName}");

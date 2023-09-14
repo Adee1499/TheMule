@@ -6,7 +6,7 @@ using System.Reactive;
 using System.Threading.Tasks;
 using TheMule.Models.Printify;
 
-namespace TheMule.ViewModels
+namespace TheMule.ViewModels.Printify
 {
     public class PrintifyArtworkViewModel : ViewModelBase
     {
@@ -15,12 +15,14 @@ namespace TheMule.ViewModels
         public ReactiveCommand<Unit, bool> ArchiveCommand { get; }
         public bool ArtworkArchived => _artworkArchived.Value;
 
-        public PrintifyArtworkViewModel(Artwork printifyArtwork) {
+        public PrintifyArtworkViewModel(Artwork printifyArtwork)
+        {
             _printifyArtwork = printifyArtwork;
             ArchiveCommand = ReactiveCommand.CreateFromTask(ArchiveArtworkAsync);
             _artworkArchived = ArchiveCommand.ToProperty(
                 this, x => x.ArtworkArchived, scheduler: RxApp.MainThreadScheduler);
-            ArchiveCommand.ThrownExceptions.Subscribe(exception => {
+            ArchiveCommand.ThrownExceptions.Subscribe(exception =>
+            {
                 this.Log().Warn("Error!", exception);
             });
         }
@@ -29,31 +31,39 @@ namespace TheMule.ViewModels
         public string UploadTime => _printifyArtwork.UploadTime.ToLocalTime().ToString();
 
         private Bitmap? _previewImage;
-        public Bitmap? PreviewImage {
+        public Bitmap? PreviewImage
+        {
             get => _previewImage;
             private set => this.RaiseAndSetIfChanged(ref _previewImage, value);
         }
 
-        public async Task LoadPreview() {
-            await using (var imageStream = await _printifyArtwork.LoadPreviewImageAsync()) {
+        public async Task LoadPreview()
+        {
+            await using (var imageStream = await _printifyArtwork.LoadPreviewImageAsync())
+            {
                 PreviewImage = await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
             }
             await SaveToDiskAsync();
         }
 
-        private async Task SaveToDiskAsync() {
-            if (PreviewImage != null) {
+        private async Task SaveToDiskAsync()
+        {
+            if (PreviewImage != null)
+            {
                 var bitmap = PreviewImage;
 
-                await Task.Run(() => {
-                    using (var fs = _printifyArtwork.SavePreviewImageStream()) {
+                await Task.Run(() =>
+                {
+                    using (var fs = _printifyArtwork.SavePreviewImageStream())
+                    {
                         bitmap.Save(fs);
                     }
                 });
             }
         }
 
-        private async Task<bool> ArchiveArtworkAsync() {
+        private async Task<bool> ArchiveArtworkAsync()
+        {
             return await _printifyArtwork.ArchiveArtworkAsync();
         }
     }

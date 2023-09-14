@@ -1,8 +1,6 @@
 using Avalonia.Controls;
-using System.Diagnostics;
-using System.Threading;
 
-namespace TheMule.Views
+namespace TheMule.Views.Printify
 {
     public partial class PrintifyArtworkView : UserControl
     {

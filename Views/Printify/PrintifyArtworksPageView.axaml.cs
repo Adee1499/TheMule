@@ -4,9 +4,9 @@ using Avalonia.ReactiveUI;
 using ReactiveUI;
 using System.Reactive;
 using System.Threading.Tasks;
-using TheMule.ViewModels;
+using TheMule.ViewModels.Printify;
 
-namespace TheMule.Views
+namespace TheMule.Views.Printify
 {
     public partial class PrintifyArtworksPageView : ReactiveUserControl<PrintifyArtworksPageViewModel>
     {

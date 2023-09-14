@@ -2,10 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="using:TheMule.ViewModels"
+        xmlns:vm="using:TheMule.ViewModels.Printify"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="550"
-        Width="1000" Height="550" x:DataType="vm:PrintifyProductNewWindowViewModel"
-        x:Class="TheMule.Views.PrintifyProductNewWindow"
+        Width="1000" Height="550" x:DataType="vm:PrintifyNewProductWindowViewModel"
+        x:Class="TheMule.Views.Printify.PrintifyProductNewWindow"
         Title="PrintifyProductNewWindow"
         Background="#0D1116" WindowStartupLocation="CenterOwner"
         TransparencyLevelHint="AcrylicBlur"
@@ -22,7 +22,7 @@
         <TextBox Grid.Row="1" Width="950" Watermark="Product title" FontSize="16"
                  Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" />
         <TextBlock Grid.Row="2" Text="Blueprint" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-        <ComboBox Grid.Row="3" Width="950" PlaceholderText="Select a blueprint" PlaceholderForeground="#8b8c8e"  
+        <ComboBox Grid.Row="3" Width="950" PlaceholderText="Select a blueprint" PlaceholderForeground="#8b8c8e" SelectedItem="{Binding SelectedBlueprint}"
                  Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintifyBlueprints}">
           <ComboBox.ItemTemplate>
             <DataTemplate>
@@ -30,14 +30,9 @@
             </DataTemplate>
           </ComboBox.ItemTemplate>
         </ComboBox>
-        <TextBlock Grid.Row="4" Text="Print providers" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-        <DataGrid Grid.Row="5" Name="PrintProvidersDataGrid" ItemsSource="{Binding PrintProviders}" 
-                  AutoGenerateColumns="False" Margin="5 10 5 20">
-          <DataGrid.Columns>
-            <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
-            <DataGridTextColumn Header="Name" Binding="{Binding Title}" />
-            <DataGridTextColumn Header="Country" Binding="{Binding Location.Country}" />
-          </DataGrid.Columns>
+        <TextBlock Grid.Row="4" Text="Variants" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+        <DataGrid Grid.Row="5" Name="VariantsColoursDataGrid" ItemsSource="{Binding VariantsColours}" 
+                  Margin="5 10 5 20" >
         </DataGrid>
       </Grid>
     </Panel>

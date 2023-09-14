@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace TheMule.Views
+namespace TheMule.Views.Printify
 {
     public partial class PrintifyProductNewWindow : Window
     {

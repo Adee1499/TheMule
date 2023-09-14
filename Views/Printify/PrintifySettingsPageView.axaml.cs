@@ -1,7 +1,7 @@
 using Avalonia.Controls;
-using TheMule.ViewModels;
+using TheMule.ViewModels.Printify;
 
-namespace TheMule.Views
+namespace TheMule.Views.Printify
 {
     public partial class PrintifySettingsPageView : UserControl
     {

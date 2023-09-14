@@ -3,9 +3,9 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using System.Threading.Tasks;
-using TheMule.ViewModels;
+using TheMule.ViewModels.Printify;
 
-namespace TheMule.Views
+namespace TheMule.Views.Printify
 {
     public partial class PrintifyProductsPageView : ReactiveUserControl<PrintifyProductsPageViewModel>
     {
@@ -15,7 +15,7 @@ namespace TheMule.Views
             this.WhenActivated(action => action(ViewModel!.ShowNewProductDialog.RegisterHandler(DoShowNewProductDialog)));
         }
 
-        private async Task DoShowNewProductDialog(InteractionContext<PrintifyProductNewWindowViewModel, PrintifyProductViewModel?> interaction) {
+        private async Task DoShowNewProductDialog(InteractionContext<PrintifyNewProductWindowViewModel, PrintifyProductViewModel?> interaction) {
             var mainWindow = Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null;
 
             var dialog = new PrintifyProductNewWindow();

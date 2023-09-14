@@ -10,6 +10,7 @@ namespace TheMule.Services
     public static class SettingsManager
     {
         public static AppSettings appSettings;
+        public static readonly string CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TheMule", "Cache");
 
         private static readonly string _settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TheMule", "settings.json");
 

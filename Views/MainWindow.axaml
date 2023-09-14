@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="using:TheMule.Views"
+        xmlns:printify="using:TheMule.Views.Printify"
+        xmlns:shopify="using:TheMule.Views.Shopify"
         mc:Ignorable="d" d:DesignWidth="1380" d:DesignHeight="768"
         Width="1380" Height="768"
         x:Class="TheMule.Views.MainWindow"
@@ -97,13 +99,13 @@
     </StackPanel>
     <Panel Width="1120" HorizontalAlignment="Right">
       <TabControl Name="tabControl_pages">
-        <views:PrintifyArtworksPageView Name="page_printifyArtworks"/>
-        <views:PrintifyProductsPageView Name="page_printifyProducts" />
-        <views:PrintifyOrdersPageView Name="page_printifyOrders" />
-        <views:PrintifySettingsPageView Name="page_printifySettings" />
-        <views:ShopifyProductsPageView Name="page_shopifyProducts" />
-        <views:ShopifyOrdersPageView Name="page_shopifyOrders" />
-        <views:ShopifySettingsPageView Name="page_shopifySettings" />
+        <printify:PrintifyArtworksPageView Name="page_printifyArtworks"/>
+        <printify:PrintifyProductsPageView Name="page_printifyProducts" />
+        <printify:PrintifyOrdersPageView Name="page_printifyOrders" />
+        <printify:PrintifySettingsPageView Name="page_printifySettings" />
+        <shopify:ShopifyProductsPageView Name="page_shopifyProducts" />
+        <shopify:ShopifyOrdersPageView Name="page_shopifyOrders" />
+        <shopify:ShopifySettingsPageView Name="page_shopifySettings" />
       </TabControl>
     </Panel>
   </Panel>

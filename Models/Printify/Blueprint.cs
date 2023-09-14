@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TheMule.Services;
+using static TheMule.Models.Printify.Blueprint;
+using static TheMule.Models.Printify.Product;
 
 namespace TheMule.Models.Printify
 {
@@ -63,5 +65,59 @@ namespace TheMule.Models.Printify
         {
             return await PrintifyService.GetBlueprintsAsync();
         }
+
+        public class BlueprintVariant 
+        {
+            [JsonPropertyName("id")]
+            public int Id { get; set; }
+
+            [JsonPropertyName("title")]
+            public string Title { get; set; }
+
+            [JsonPropertyName("options")]
+            public BlueprintOptions Options { get; set; }
+
+            [JsonPropertyName("placeholders")]
+            public BlueprintPlaceholder[] Placeholders { get; set; }
+
+
+            public static async Task<IEnumerable<BlueprintVariant>> GetVariantsAsync(int blueprintId, int printProviderId) {
+                return await PrintifyService.GetVariantsAsync(blueprintId, printProviderId);
+            }
+        }
+
+        public class BlueprintOptions 
+        {
+            [JsonPropertyName("color")]
+            public string Colour { get; set; }
+
+            [JsonPropertyName("size")]
+            public string Size { get; set; }
+        }
+
+        public class BlueprintPlaceholder 
+        {
+            [JsonPropertyName("position")]
+            public string Position { get; set; }
+
+            [JsonPropertyName("height")]
+            public int Height { get; set; }
+
+            [JsonPropertyName("width")]
+            public int Width { get; set; }
+        }
+    }
+
+
+    public class BlueprintVariantsResponse
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("title")]
+        public string PrintProvider { get; set; }
+
+        [JsonPropertyName("variants")]
+        public BlueprintVariant[] Variants { get; set; }
     }
 }
