@@ -8,15 +8,14 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Input;
 using TheMule.Models.Printify;
-using TheMule.Views.Printify;
 
 namespace TheMule.ViewModels.Printify
 {
     public class ArtworksPageViewModel : ViewModelBase
     {
-        private ArtworkView? _selectedArtwork;
+        private ArtworkViewModel? _selectedArtwork;
         public ObservableCollection<ArtworkViewModel> PrintifyArtworks { get; } = new();
-        public ArtworkView? SelectedArtwork
+        public ArtworkViewModel? SelectedArtwork
         {
             get => _selectedArtwork;
             set => this.RaiseAndSetIfChanged(ref _selectedArtwork, value);

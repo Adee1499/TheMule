@@ -1,8 +1,9 @@
 ﻿using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading;
+using System.Reactive;
 using TheMule.Models.Printify;
 using TheMule.Services;
 
@@ -30,23 +31,41 @@ namespace TheMule.ViewModels.Printify
         }
         public ObservableCollection<PrintProvider> PrintProviders { get; } = new();
 
-        public ObservableCollection<string> VariantsColours { get; } = new();
-        public ObservableCollection<string> VariantsSizes { get; } = new();
+        public ObservableCollection<VariantColour> VariantsColours { get; } = new();
+        public ObservableCollection<VariantSize> VariantsSizes { get; } = new();
 
-        private CancellationTokenSource? _cancellationTokenSource;
-
-        public NewProductWindowViewModel()
-        {
-            FetchBlueprints();
+        private ArtworkViewModel? _selectedArtwork;
+        public ObservableCollection<ArtworkViewModel> PrintifyArtworks { get; } = new();
+        public ArtworkViewModel? SelectedArtwork {
+            get => _selectedArtwork;
+            set {
+                this.RaiseAndSetIfChanged(ref _selectedArtwork, value);
+                _selectedArtwork.LoadPreview();
+            }
         }
 
-        private async void FetchBlueprints()
-        {
-            PrintifyBlueprints.Clear();
+        private bool _isBusy;
+        public bool IsBusy {
+            get => _isBusy;
+            set => this.RaiseAndSetIfChanged(ref _isBusy, value);
+        }
 
-            _cancellationTokenSource?.Cancel();
-            _cancellationTokenSource = new CancellationTokenSource();
-            var cancellationToken = _cancellationTokenSource.Token;
+        public ReactiveCommand<Unit, ArtworkViewModel?> CreateProductCommand { get; }
+
+        public NewProductWindowViewModel() {
+            CreateProductCommand = ReactiveCommand.Create(() => {
+                CreateProduct();
+                return _selectedArtwork;
+            });
+
+            FetchBlueprints();
+            FetchArtworks();
+        }
+
+        private async void FetchBlueprints() { 
+            IsBusy = true;
+
+            PrintifyBlueprints.Clear();
 
             var blueprints = await Blueprint.GetBlueprintsAsync();
 
@@ -60,10 +79,22 @@ namespace TheMule.ViewModels.Printify
                 }
             }
 
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                // LoadPreviewImages(cancellationToken);
+            IsBusy = false;
+        }
+
+        private async void FetchArtworks() {
+            IsBusy = true;
+
+            PrintifyArtworks.Clear();
+
+            var artworks = await Artwork.GetArtworksAsync();
+
+            foreach (var artwork in artworks) {
+                var vm = new ArtworkViewModel(artwork);
+                PrintifyArtworks.Add(vm);
             }
+
+            IsBusy = false;
         }
 
         private async void FetchPrintProviders(int[] printProvidersIds)
@@ -106,9 +137,8 @@ namespace TheMule.ViewModels.Printify
                 .Distinct()
                 .ToList();
 
-            foreach (string colour in colours)
-            {
-                VariantsColours.Add(colour);
+            foreach (string colour in colours) {
+                VariantsColours.Add(new VariantColour { Colour = colour, Selected = false });
             }
 
             List<string> sizes = availableVariants
@@ -116,10 +146,30 @@ namespace TheMule.ViewModels.Printify
                 .Distinct()
                 .ToList();
 
-            foreach (string size in sizes)
-            {
-                VariantsSizes.Add(size);
+            foreach (string size in sizes) {
+                VariantsSizes.Add(new VariantSize { Size = size, Selected = false });
             }
+        }
+
+        private void CreateProduct() {
+            Debug.WriteLine("Creating product");
+            
+            // Create 4 products on Printify, one for each market
+
+
+            // Close the dialog window
+
+        }
+
+
+        public class VariantColour {
+            public bool Selected { get; set; }
+            public string Colour { get; set; }
+        }
+
+        public class VariantSize {
+            public bool Selected { get; set; }
+            public string Size { get; set; }
         }
     }
 }

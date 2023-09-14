@@ -6,14 +6,15 @@ using System.Threading;
 using System.Windows.Input;
 using TheMule.Models.Printify;
 using TheMule.Views.Printify;
+using Tmds.DBus.Protocol;
 
 namespace TheMule.ViewModels.Printify
 {
     public class ProductsPageViewModel : ViewModelBase
     {
-        private ProductView? _selectedProduct;
+        private ProductViewModel? _selectedProduct;
         public ObservableCollection<ProductViewModel> PrintifyProducts { get; } = new();
-        public ProductView? SelectedProduct
+        public ProductViewModel? SelectedProduct
         {
             get => _selectedProduct;
             set => this.RaiseAndSetIfChanged(ref _selectedProduct, value);

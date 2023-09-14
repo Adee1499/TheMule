@@ -3,8 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:TheMule.ViewModels.Printify"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="550"
-        Width="1000" Height="550" x:DataType="vm:NewProductWindowViewModel"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+        Width="1000" Height="700" x:DataType="vm:NewProductWindowViewModel"
         x:Class="TheMule.Views.Printify.NewProductWindow"
         Title="PrintifyProductNewWindow"
         Background="#0D1116" WindowStartupLocation="CenterOwner"
@@ -30,10 +30,45 @@
             </DataTemplate>
           </ComboBox.ItemTemplate>
         </ComboBox>
-        <TextBlock Grid.Row="4" Text="Variants" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-        <DataGrid Grid.Row="5" Name="VariantsColoursDataGrid" ItemsSource="{Binding VariantsColours}" 
-                  Margin="5 10 5 20" >
-        </DataGrid>
+        <Grid Grid.Row="4" ColumnDefinitions="1*,1*" RowDefinitions="Auto Auto">
+          <TextBlock Grid.Column="0" Grid.Row="0" Text="Colours" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+          <DataGrid Grid.Column="0" Grid.Row="1" Name="VariantsColoursDataGrid" ItemsSource="{Binding VariantsColours}"
+                    AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns>
+              <DataGridCheckBoxColumn Binding="{Binding Selected}" />
+              <DataGridTextColumn Binding="{Binding Colour}" />
+            </DataGrid.Columns>
+          </DataGrid>
+          <TextBlock Grid.Column="1" Grid.Row="0" Text="Sizes" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+          <DataGrid Grid.Column="1" Grid.Row="1" Name="VariantsSizesDataGrid" ItemsSource="{Binding VariantsSizes}"
+                    AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns>
+              <DataGridCheckBoxColumn Binding="{Binding Selected}" />
+              <DataGridTextColumn Binding="{Binding Size}" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </Grid>
+        <TextBlock Grid.Row="5" Text="Artwork" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+        <StackPanel Grid.Row="6" Grid.Column="0" Orientation="Vertical">
+          <ComboBox Width="645" PlaceholderText="Select an artwork" PlaceholderForeground="#8b8c8e" SelectedItem="{Binding SelectedArtwork}"
+                   Margin="5 30 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintifyArtworks}">
+            <ComboBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding FileName}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <Button Content="Create product" Margin="250 25 0 10" FontFamily="{StaticResource BarlowFont}" Command="{Binding CreateProductCommand}"
+                  Padding="20" FontSize="20" Foreground="#FFF27A" Background="#23292f" CornerRadius="10" />
+        </StackPanel>
+        <Border Grid.Row="6" Grid.Column="1" CornerRadius="10" ClipToBounds="True">
+          <Panel Background="#23292F" Height="200" Width="200" Margin="660 0 0 0">
+            <Border CornerRadius="5">
+              <Image Width="170" Height="170" Stretch="Uniform"
+                     Margin="15" Source="{Binding SelectedArtwork.PreviewImage}"/>
+            </Border>
+          </Panel>
+        </Border>
       </Grid>
     </Panel>
   </DockPanel>
