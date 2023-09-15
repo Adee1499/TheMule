@@ -11,6 +11,12 @@ namespace TheMule.ViewModels.Printify
 {
     public class NewProductWindowViewModel : ViewModelBase
     {
+        private string? _inputTitle;
+        public string? InputTitle {
+            get => _inputTitle;
+            set => this.RaiseAndSetIfChanged(ref _inputTitle, value);
+        }
+
         private Blueprint? _selectedBlueprint;
         public ObservableCollection<Blueprint> PrintifyBlueprints { get; } = new();
         public Blueprint? SelectedBlueprint
@@ -31,6 +37,8 @@ namespace TheMule.ViewModels.Printify
         }
         public ObservableCollection<PrintProvider> PrintProviders { get; } = new();
 
+
+        private List<Blueprint.BlueprintVariant> _availableVariants = new();
         public ObservableCollection<VariantColour> VariantsColours { get; } = new();
         public ObservableCollection<VariantSize> VariantsSizes { get; } = new();
 
@@ -44,18 +52,20 @@ namespace TheMule.ViewModels.Printify
             }
         }
 
+        private Product[]? _newProducts;
+
         private bool _isBusy;
         public bool IsBusy {
             get => _isBusy;
             set => this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
 
-        public ReactiveCommand<Unit, ArtworkViewModel?> CreateProductCommand { get; }
+        public ReactiveCommand<Unit, Product[]?> CreateProductCommand { get; }
 
         public NewProductWindowViewModel() {
             CreateProductCommand = ReactiveCommand.Create(() => {
-                CreateProduct();
-                return _selectedArtwork;
+                CreateProductsAsync();
+                return _newProducts;
             });
 
             FetchBlueprints();
@@ -100,6 +110,7 @@ namespace TheMule.ViewModels.Printify
         private async void FetchPrintProviders(int[] printProvidersIds)
         {
             PrintProviders.Clear();
+            _availableVariants.Clear();
 
             var printProviders = await PrintProvider.GetPrintProvidersAsync();
 
@@ -114,25 +125,24 @@ namespace TheMule.ViewModels.Printify
                 }
             }
 
-            List<Blueprint.BlueprintVariant> availableVariants = new();
 
             // Check if there's at least one list of variants
             if (variantsList.Count > 0)
             {
                 // Initialize availableVariants with the first list as a starting point
-                availableVariants.AddRange(variantsList.First());
+                _availableVariants.AddRange(variantsList.First());
 
                 // Iterate through the rest of the lists and find common variants
                 foreach (var variants in variantsList.Skip(1))
                 {
                     // Use LINQ's Intersect to find common variants by Id
-                    availableVariants = availableVariants
+                    _availableVariants = _availableVariants
                         .Join(variants, av => av.Id, v => v.Id, (av, v) => av)
                         .ToList();
                 }
             }
 
-            List<string> colours = availableVariants
+            List<string> colours = _availableVariants
                 .Select(variant => variant.Options.Colour)
                 .Distinct()
                 .ToList();
@@ -141,7 +151,7 @@ namespace TheMule.ViewModels.Printify
                 VariantsColours.Add(new VariantColour { Colour = colour, Selected = false });
             }
 
-            List<string> sizes = availableVariants
+            List<string> sizes = _availableVariants
                 .Select(variant => variant.Options.Size)
                 .Distinct()
                 .ToList();
@@ -151,16 +161,69 @@ namespace TheMule.ViewModels.Printify
             }
         }
 
-        private void CreateProduct() {
-            Debug.WriteLine("Creating product");
-            
+        private async void CreateProductsAsync() {
+            Debug.WriteLine("Creating products");
+
             // Create 4 products on Printify, one for each market
+            List<Product.ProductVariant> variants = new();
 
+            foreach (VariantColour colour in VariantsColours) {
+                if (colour.Selected) {
+                    foreach (VariantSize size in VariantsSizes) {
+                        if (size.Selected) {
+                            var variant = _availableVariants.FirstOrDefault(v => v.Options.Colour.Equals(colour.Colour) && v.Options.Size.Equals(size.Size));
+                            if (variant != null) {
+                                variants.Add(new Product.ProductVariant(variant.Id));
+                            }
+                        }
+                    }
+                }
+            }
 
-            // Close the dialog window
-
+            await Product.CreateProductAsync(CreateProductObject(variants, 
+                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK, "UK"));
+            await Product.CreateProductAsync(CreateProductObject(variants, 
+                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU, "EU"));
+            await Product.CreateProductAsync(CreateProductObject(variants, 
+                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].US, "US"));
+            await Product.CreateProductAsync(CreateProductObject(variants, 
+                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU, "AU"));
         }
 
+        private Product CreateProductObject(List<Product.ProductVariant> variants, AppSettings.BlueprintPrintProviderSettings blueprintSettings, string titlePrefix) {
+            Product.ProductPlaceholderImage frontPlaceholderImage = new Product.ProductPlaceholderImage {
+                Id = _selectedArtwork!.Id,
+                X = blueprintSettings.Placeholders.Front.X,
+                Y = blueprintSettings.Placeholders.Front.Y,
+                Scale = blueprintSettings.Placeholders.Front.Scale,
+                Angle = blueprintSettings.Placeholders.Front.Angle
+            };
+
+            Product.ProductPlaceholder frontPlaceholder = new Product.ProductPlaceholder {
+                Position = "front",
+                Images = new Product.ProductPlaceholderImage[] { frontPlaceholderImage }
+            };
+
+            Product.ProductPlaceholderImage neckPlaceholderImage = new Product.ProductPlaceholderImage {
+                Id = _selectedArtwork!.Id,
+                X = blueprintSettings.Placeholders.Neck.X,
+                Y = blueprintSettings.Placeholders.Neck.Y,
+                Scale = blueprintSettings.Placeholders.Neck.Scale,
+                Angle = blueprintSettings.Placeholders.Neck.Angle
+            };
+
+            Product.ProductPlaceholder neckPlaceholder = new Product.ProductPlaceholder {
+                Position = "neck",
+                Images = new Product.ProductPlaceholderImage[] { neckPlaceholderImage }
+            };
+
+            Product.ProductPrintArea printArea = new Product.ProductPrintArea {
+                Variants = variants.Select(v => v.Id).ToArray(),
+                Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, neckPlaceholder }
+            };
+
+            return new Product($"{titlePrefix}_{_inputTitle!}", _selectedBlueprint!.Id, blueprintSettings.PrintProviderId, variants.ToArray(), new Product.ProductPrintArea[] { printArea });
+        }
 
         public class VariantColour {
             public bool Selected { get; set; }

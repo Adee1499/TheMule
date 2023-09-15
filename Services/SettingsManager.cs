@@ -170,8 +170,8 @@ namespace TheMule.Services
                 }
             }
 
-            private float _angle;
-            public float Angle {
+            private int _angle;
+            public int Angle {
                 get => _angle;
                 set {
                     this.RaiseAndSetIfChanged(ref _angle, value);

@@ -92,17 +92,16 @@ namespace TheMule.Models.Printify
             return await PrintifyService.ArchiveArtworkAsync(Id);
         }
 
-        public static async Task<Artwork> UploadArtwork(string filePath, string fileName)
+        public static async Task<Artwork> UploadArtworkAsync(string filePath, string fileName)
         {
             string cloudflareResourceUrl = await CloudflareService.UploadFile(filePath, fileName);
             if (cloudflareResourceUrl.StartsWith("Error")) return null!;
             Artwork newArtwork = new Artwork(fileName, cloudflareResourceUrl);
-            bool result = await PrintifyService.UploadArtworkAsync(newArtwork);
-            if (!result) {
-                return null!;
-            } else {
+            if (await PrintifyService.UploadArtworkAsync(newArtwork)) {
                 await CloudflareService.DeleteFile(fileName);
                 return newArtwork;
+            } else  {
+                return null!;
             }
         }
     }

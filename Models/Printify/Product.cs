@@ -12,7 +12,7 @@ namespace TheMule.Models.Printify
 {
     public class Product
     {
-        [JsonPropertyName("id")]
+        [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Id { get; set; }
 
         [JsonPropertyName("title"), JsonRequired]
@@ -21,25 +21,25 @@ namespace TheMule.Models.Printify
         [JsonPropertyName("description"), JsonRequired]
         public string Description { get; set; }
 
-        [JsonPropertyName("tags")]
+        [JsonPropertyName("tags"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string[]? Tags { get; set; }
 
-        [JsonPropertyName("options")]
+        [JsonPropertyName("options"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ProductOption[] Options { get; set; }
 
         [JsonPropertyName("variants"), JsonRequired]
         public ProductVariant[] Variants { get; set; }
 
-        [JsonPropertyName("images")]
+        [JsonPropertyName("images"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public ProductImage[] Images { get; set; }
 
-        [JsonPropertyName("created_at"), JsonConverter(typeof(PrintifyDateTimeOffsetConverter))]
+        [JsonPropertyName("created_at"), JsonConverter(typeof(PrintifyDateTimeOffsetConverter)), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public DateTimeOffset CreatedAt { get; set; }
 
-        [JsonPropertyName("updated_at"), JsonConverter(typeof(PrintifyDateTimeOffsetConverter))]
+        [JsonPropertyName("updated_at"), JsonConverter(typeof(PrintifyDateTimeOffsetConverter)), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public DateTimeOffset UpdatedAt { get; set; }
 
-        [JsonPropertyName("visible")]
+        [JsonPropertyName("visible"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool Visible { get; set; }
 
         [JsonPropertyName("blueprint_id"), JsonRequired]
@@ -48,16 +48,16 @@ namespace TheMule.Models.Printify
         [JsonPropertyName("print_provider_id"), JsonRequired]
         public int PrintProviderId { get; set; }
 
-        [JsonPropertyName("user_id")]
+        [JsonPropertyName("user_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int UserId { get; set; }
 
-        [JsonPropertyName("shop_id")]
+        [JsonPropertyName("shop_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int ShopId { get; set; }
 
         [JsonPropertyName("print_areas"), JsonRequired]
         public ProductPrintArea[] PrintAreas { get; set; }
 
-
+        [JsonConstructor]
         public Product(
             string id, string title, string description, string[] tags, ProductOption[] options, ProductVariant[] variants,
             ProductImage[] images, DateTimeOffset createdAt, DateTimeOffset updatedAt, bool visible, int blueprintId,
@@ -77,6 +77,18 @@ namespace TheMule.Models.Printify
             PrintProviderId = printProviderId;
             UserId = userId;
             ShopId = shopId;
+            PrintAreas = printAreas;
+        }
+
+        public Product(
+            string title, int blueprintId, int printProviderId, ProductVariant[] variants,
+            ProductPrintArea[] printAreas) 
+        {
+            Title = title;
+            Description = "";
+            BlueprintId = blueprintId;
+            PrintProviderId = printProviderId;
+            Variants = variants;
             PrintAreas = printAreas;
         }
 
@@ -105,6 +117,9 @@ namespace TheMule.Models.Printify
             return File.OpenWrite($"{CachePath}-{Title}.png");
         }
 
+        public static async Task<bool> CreateProductAsync(Product newProduct) {
+            return await PrintifyService.CreateProductAsync(newProduct);
+        }
 
         public class ProductOption
         {
@@ -132,32 +147,38 @@ namespace TheMule.Models.Printify
             [JsonPropertyName ("id")]
             public int Id { get; set; }
 
-            [JsonPropertyName("sku")]
+            [JsonPropertyName("sku"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string SKU { get; set; }
 
-            [JsonPropertyName("cost")]
+            [JsonPropertyName("cost"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public int Cost { get; set; }
 
             [JsonPropertyName("price")]
             public int Price { get; set; }
 
-            [JsonPropertyName("title")]
+            [JsonPropertyName("title"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string Title { get; set; }
 
-            [JsonPropertyName("grams")]
+            [JsonPropertyName("grams"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public int Grams { get; set; }
 
             [JsonPropertyName("is_enabled")]
             public bool IsEnabled { get; set; }
 
-            [JsonPropertyName("is_default")]
+            [JsonPropertyName("is_default"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public bool IsDefault { get; set; }
 
-            [JsonPropertyName("is_available")]
+            [JsonPropertyName("is_available"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public bool IsAvailable { get; set; }
 
-            [JsonPropertyName("options")]
+            [JsonPropertyName("options"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public int[] Options { get; set; }
+
+            public ProductVariant(int id) {
+                Id = id;
+                Price = 400;
+                IsEnabled = true;
+            }
         }
 
         public class ProductImage 
@@ -183,7 +204,7 @@ namespace TheMule.Models.Printify
             [JsonPropertyName("placeholders")]
             public ProductPlaceholder[] Placeholders { get; set; }
 
-            [JsonPropertyName("background")]
+            [JsonPropertyName("background"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string Background { get; set; }
         }
 
@@ -201,16 +222,16 @@ namespace TheMule.Models.Printify
             [JsonPropertyName("id"), JsonRequired]
             public string Id { get; set; }
 
-            [JsonPropertyName("name")]
+            [JsonPropertyName("name"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string Name { get; set; }
 
-            [JsonPropertyName("type")]
+            [JsonPropertyName("type"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string Type { get; set; }
 
-            [JsonPropertyName("height")]
+            [JsonPropertyName("height"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public int Height { get; set; }
 
-            [JsonPropertyName("width")]
+            [JsonPropertyName("width"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public int Width { get; set; }
 
             [JsonPropertyName("x"), JsonRequired]

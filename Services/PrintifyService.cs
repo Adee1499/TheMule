@@ -111,6 +111,21 @@ namespace TheMule.Services
             return productsData;
         }
 
+        public static async Task<bool> CreateProductAsync(Product newProduct) {
+            if (_client == null) InitializeRestClient();
+
+            string jsonBody = JsonSerializer.Serialize(newProduct);
+
+            var request = new RestRequest {
+                Resource = $"shops/{_shopId}/products.json"
+            };
+            request.AddStringBody(jsonBody, ContentType.Json);
+
+            var response = await _client!.PostAsync(request);
+
+            return (response.StatusCode == System.Net.HttpStatusCode.OK);
+        }
+
         public static async Task<List<Blueprint>> GetBlueprintsAsync() {
             if (_client == null) InitializeRestClient();
 

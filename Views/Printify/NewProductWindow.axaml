@@ -20,7 +20,7 @@
       <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
         <TextBlock Grid.Row="0" Text="Title" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
         <TextBox Grid.Row="1" Width="950" Watermark="Product title" FontSize="16"
-                 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" />
+                 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" Text="{Binding InputTitle}" />
         <TextBlock Grid.Row="2" Text="Blueprint" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
         <ComboBox Grid.Row="3" Width="950" PlaceholderText="Select a blueprint" PlaceholderForeground="#8b8c8e" SelectedItem="{Binding SelectedBlueprint}"
                  Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintifyBlueprints}">

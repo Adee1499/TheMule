@@ -48,7 +48,7 @@ namespace TheMule.ViewModels.Printify
                 if (file is not null)
                 {
                     string filePath = file.TryGetLocalPath()!;
-                    var newArtwork = await Artwork.UploadArtwork(filePath, Path.GetFileName(filePath));
+                    var newArtwork = await Artwork.UploadArtworkAsync(filePath, Path.GetFileName(filePath));
                     FetchArtworks();
                 }
             });

@@ -26,7 +26,7 @@ namespace TheMule.ViewModels.Printify
                 this.Log().Warn("Error!", exception);
             });
         }
-
+        public string Id => _printifyArtwork.Id;
         public string FileName => _printifyArtwork.FileName;
         public string UploadTime => _printifyArtwork.UploadTime.ToLocalTime().ToString();
 
