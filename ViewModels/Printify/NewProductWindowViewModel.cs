@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -137,7 +138,7 @@ namespace TheMule.ViewModels.Printify
                 {
                     // Use LINQ's Intersect to find common variants by Id
                     _availableVariants = _availableVariants
-                        .Join(variants, av => av.Id, v => v.Id, (av, v) => av)
+                        .Join(variants, av => av.Options.Colour, v => v.Options.Colour, (av, v) => av)
                         .ToList();
                 }
             }
@@ -173,7 +174,7 @@ namespace TheMule.ViewModels.Printify
                         if (size.Selected) {
                             var variant = _availableVariants.FirstOrDefault(v => v.Options.Colour.Equals(colour.Colour) && v.Options.Size.Equals(size.Size));
                             if (variant != null) {
-                                variants.Add(new Product.ProductVariant(variant.Id));
+                                variants.Add(new Product.ProductVariant(variant.Id, variant.Options.Colour));
                             }
                         }
                     }
@@ -182,12 +183,14 @@ namespace TheMule.ViewModels.Printify
 
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK, "UK"));
+            /*
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU, "EU"));
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].US, "US"));
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU, "AU"));
+            */
         }
 
         private Product CreateProductObject(List<Product.ProductVariant> variants, AppSettings.BlueprintPrintProviderSettings blueprintSettings, string titlePrefix) {
@@ -204,25 +207,45 @@ namespace TheMule.ViewModels.Printify
                 Images = new Product.ProductPlaceholderImage[] { frontPlaceholderImage }
             };
 
-            Product.ProductPlaceholderImage neckPlaceholderImage = new Product.ProductPlaceholderImage {
-                Id = _selectedArtwork!.Id,
+            Product.ProductPlaceholderImage blackNeckPlaceholderImage = new Product.ProductPlaceholderImage {
+                Id = SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoArtworkId,
                 X = blueprintSettings.Placeholders.Neck.X,
                 Y = blueprintSettings.Placeholders.Neck.Y,
                 Scale = blueprintSettings.Placeholders.Neck.Scale,
                 Angle = blueprintSettings.Placeholders.Neck.Angle
             };
 
-            Product.ProductPlaceholder neckPlaceholder = new Product.ProductPlaceholder {
+            Product.ProductPlaceholderImage whiteNeckPlaceholderImage = new Product.ProductPlaceholderImage {
+                Id = SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.WhiteLogoArtworkId,
+                X = blueprintSettings.Placeholders.Neck.X,
+                Y = blueprintSettings.Placeholders.Neck.Y,
+                Scale = blueprintSettings.Placeholders.Neck.Scale,
+                Angle = blueprintSettings.Placeholders.Neck.Angle
+            };
+
+            Product.ProductPlaceholder blackNeckPlaceholder = new Product.ProductPlaceholder {
                 Position = "neck",
-                Images = new Product.ProductPlaceholderImage[] { neckPlaceholderImage }
+                Images = new Product.ProductPlaceholderImage[] { blackNeckPlaceholderImage }
             };
 
-            Product.ProductPrintArea printArea = new Product.ProductPrintArea {
-                Variants = variants.Select(v => v.Id).ToArray(),
-                Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, neckPlaceholder }
+            Product.ProductPlaceholder whiteNeckPlaceholder = new Product.ProductPlaceholder {
+                Position = "neck",
+                Images = new Product.ProductPlaceholderImage[] { whiteNeckPlaceholderImage }
             };
 
-            return new Product($"{titlePrefix}_{_inputTitle!}", _selectedBlueprint!.Id, blueprintSettings.PrintProviderId, variants.ToArray(), new Product.ProductPrintArea[] { printArea });
+            Dictionary<string, bool> colourVariants = SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoColours;
+
+            Product.ProductPrintArea blackLogoPrintArea = new Product.ProductPrintArea {
+                Variants = variants.Where(v => colourVariants.ContainsKey(v.Title) && colourVariants[v.Title]).Select(v => v.Id).ToArray(),
+                Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, blackNeckPlaceholder }
+            };
+
+            Product.ProductPrintArea whiteLogoPrintArea = new Product.ProductPrintArea {
+                Variants = variants.Where(v => colourVariants.ContainsKey(v.Title) && !colourVariants[v.Title]).Select(v => v.Id).ToArray(),
+                Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, whiteNeckPlaceholder }
+            };
+
+            return new Product($"{titlePrefix}_{_inputTitle!}", _selectedBlueprint!.Id, blueprintSettings.PrintProviderId, variants.ToArray(), new Product.ProductPrintArea[] { blackLogoPrintArea, whiteLogoPrintArea });
         }
 
         public class VariantColour {

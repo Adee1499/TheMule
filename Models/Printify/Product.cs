@@ -174,10 +174,25 @@ namespace TheMule.Models.Printify
             [JsonPropertyName("options"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public int[] Options { get; set; }
 
-            public ProductVariant(int id) {
+            [JsonConstructor]
+            public ProductVariant(int id, string sku, int cost, int price, string title, int grams, bool isEnabled, bool isDefault, bool isAvailable, int[] options) {
+                Id = id;
+                SKU = sku;
+                Cost = cost; 
+                Price = price;
+                Title = title;
+                Grams = grams;
+                IsEnabled = isEnabled;
+                IsDefault = isDefault;
+                IsAvailable = isAvailable;
+                Options = options;
+            }
+
+            public ProductVariant(int id, string colour) {
                 Id = id;
                 Price = 400;
                 IsEnabled = true;
+                Title = colour;
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -70,6 +71,7 @@ namespace TheMule.Services
             public BlueprintPrintProviderSettings EU { get; set; }
             public BlueprintPrintProviderSettings US { get; set; }
             public BlueprintPrintProviderSettings AU { get; set; }
+            public BlueprintLogoSettings LogoSettings { get; set; }
 
             public BlueprintSettings() {
                 UK = new BlueprintPrintProviderSettings {
@@ -94,6 +96,13 @@ namespace TheMule.Services
                     PrintProviderId = 0, Placeholders = new PlaceholdersKey {
                         Front = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 },
                         Neck = new PlaceholderSettings { X = 0, Y = 0, Angle = 0, Scale = 0 }
+                    }
+                };
+                LogoSettings = new BlueprintLogoSettings {
+                    BlackLogoArtworkId = "",
+                    WhiteLogoArtworkId = "",
+                    BlackLogoColours = new Dictionary<string, bool> {
+                        { "Black", false }
                     }
                 };
             }
@@ -175,6 +184,35 @@ namespace TheMule.Services
                 get => _angle;
                 set {
                     this.RaiseAndSetIfChanged(ref _angle, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+        }
+
+        public class BlueprintLogoSettings : ReactiveObject
+        {
+            private string _whiteLogoArtworkId = "";
+            private string _blackLogoArtworkId = "";
+            public string WhiteLogoArtworkId {
+                get => _whiteLogoArtworkId;
+                set {
+                    this.RaiseAndSetIfChanged(ref _whiteLogoArtworkId, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+            public string BlackLogoArtworkId {
+                get => _blackLogoArtworkId;
+                set {
+                    this.RaiseAndSetIfChanged(ref _blackLogoArtworkId, value);
+                    SettingsManager.SaveSettings();
+                }
+            }
+
+            private Dictionary<string, bool> _blackLogoColours;
+            public Dictionary<string, bool> BlackLogoColours {
+                get => _blackLogoColours;
+                set {
+                    this.RaiseAndSetIfChanged(ref _blackLogoColours, value);
                     SettingsManager.SaveSettings();
                 }
             }

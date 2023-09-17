@@ -154,6 +154,20 @@ namespace TheMule.Services
             return printProvidersData;
         }
 
+        public static async Task<List<PrintProvider>> GetPrintProvidersForBlueprintAsync(int blueprintId) {
+            if (_client == null) InitializeRestClient();
+
+            List<PrintProvider> printProvidersData = new();
+
+            var response = await _client!.GetJsonAsync<PrintProvider[]>($"catalog/blueprints/{blueprintId}/print_providers.json");
+
+            if (response != null) {
+                printProvidersData = response.ToList();
+            }
+
+            return printProvidersData;
+        }
+
         public static async Task<List<BlueprintVariant>> GetVariantsAsync(int blueprintId, int printProviderId) {
             if (_client == null) InitializeRestClient();
 

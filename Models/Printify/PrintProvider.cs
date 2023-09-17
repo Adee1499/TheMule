@@ -33,6 +33,11 @@ namespace TheMule.Models.Printify
         {
             return await PrintifyService.GetPrintProvidersAsync();
         }
+
+        public static async Task<IEnumerable<PrintProvider>> GetPrintProvidersForBlueprintAsync(int blueprintId) 
+        {
+            return await PrintifyService.GetPrintProvidersForBlueprintAsync(blueprintId);
+        }
     }
     
     public class PrintProviderLocation 

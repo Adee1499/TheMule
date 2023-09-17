@@ -7,7 +7,7 @@
              Width="1120" Height="768" Background="Transparent"
              x:Class="TheMule.Views.Printify.SettingsPageView"
              x:DataType="vm:SettingsPageViewModel">
-  <DockPanel>
+  <ScrollViewer>
     <StackPanel Margin="20 25 20 10">
       <TextBlock Grid.Row="0" Text="Blueprint settings" FontFamily="{StaticResource BarlowFont}" 
                  FontSize="16" Margin="0 0 0 10" />
@@ -23,7 +23,7 @@
           </ComboBox.ItemTemplate>
         </ComboBox>  
       </Grid>
-      <Border CornerRadius="10" Width="1010" Height="466" 
+      <Border CornerRadius="10" Width="1010" Height="480" 
               Background="#161B22" BorderThickness="1" BorderBrush="#23292F">
         <Panel>
           <Line StartPoint="505,0" EndPoint="505,466" Stroke="#23292F" />
@@ -36,7 +36,7 @@
                 <TextBlock Text="Print Provider:" Margin="15 15 0 0"
                            FontFamily="{StaticResource BarlowFont}" FontSize="16" />
                 <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
-                          SelectedItem="{Binding UKPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                          SelectedItem="{Binding UKPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding AvailablePrintProviders}">
                   <ComboBox.ItemTemplate>
                     <DataTemplate>
                       <TextBlock Text="{Binding ComboBoxText}" />
@@ -107,7 +107,7 @@
                 <TextBlock Text="Print Provider:" Margin="15 15 0 0"
                            FontFamily="{StaticResource BarlowFont}" FontSize="16" />
                 <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
-                          SelectedItem="{Binding EUPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                          SelectedItem="{Binding EUPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding AvailablePrintProviders}">
                   <ComboBox.ItemTemplate>
                     <DataTemplate>
                       <TextBlock Text="{Binding ComboBoxText}" />
@@ -178,7 +178,7 @@
                 <TextBlock Text="Print Provider:" Margin="15 15 0 0"
                            FontFamily="{StaticResource BarlowFont}" FontSize="16" />
                 <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
-                          SelectedItem="{Binding USPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                          SelectedItem="{Binding USPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding AvailablePrintProviders}">
                   <ComboBox.ItemTemplate>
                     <DataTemplate>
                       <TextBlock Text="{Binding ComboBoxText}" />
@@ -249,7 +249,7 @@
                 <TextBlock Text="Print Provider:" Margin="15 15 0 0"
                            FontFamily="{StaticResource BarlowFont}" FontSize="16" />
                 <ComboBox PlaceholderText="Select a print provider" PlaceholderForeground="#8B8C8E" Margin="20 10 0 0" Width="350"
-                          SelectedItem="{Binding AUPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding PrintProviders}">
+                          SelectedItem="{Binding AUPrintProvider}" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding AvailablePrintProviders}">
                   <ComboBox.ItemTemplate>
                     <DataTemplate>
                       <TextBlock Text="{Binding ComboBoxText}" />
@@ -316,6 +316,68 @@
           </Grid>
         </Panel>
       </Border>
+      <Border CornerRadius="10" Width="1010" Height="266" Margin="0 20 0 10" 
+              Background="#161B22" BorderThickness="1" BorderBrush="#23292F">
+        <Panel>
+          <Line StartPoint="0,35" EndPoint="1010,35" Stroke="#23292F" />
+          <Line StartPoint="505,35" EndPoint="505,266" Stroke="#23292F" />
+          <TextBlock Text="Neck label settings" Margin="15 6 0 0"
+                      FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+          <Grid ColumnDefinitions="1* 1*">
+            <Panel Grid.Column="0" Margin="15 45 0 0">
+              <TextBlock Text="White logo:" Margin="5 5 0 0"
+                   FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+              <ComboBox PlaceholderText="Select the artwork" PlaceholderForeground="#8B8C8E" Margin="120 0 0 0" Width="350"
+                    SelectedItem="{Binding SelectedWhiteLogo}" FontFamily="{StaticResource BarlowFont}" 
+                    FontSize="16" ItemsSource="{Binding PrintifyArtworks}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding FileName}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+              <Border CornerRadius="10" ClipToBounds="True">
+                <Panel Background="#23292F" Height="150" Width="150" Margin="-320 20 0 0">
+                  <Border CornerRadius="5">
+                    <Image Width="130" Height="130" Stretch="Uniform"
+                           Margin="5" Source="{Binding SelectedWhiteLogo.PreviewImage}"/>
+                  </Border>
+                </Panel>
+              </Border>
+              <TextBlock Text="Colours" Margin="190 45 0 0"
+                         FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+              <DataGrid Name="VariantsColoursBlackDataGrid" ItemsSource="{Binding VariantsColoursBlackLogo}" Width="290"
+                        AutoGenerateColumns="False" Margin="190 70 5 20" HeadersVisibility="None" Height="140" VerticalScrollBarVisibility="Auto">
+                <DataGrid.Columns>
+                  <DataGridCheckBoxColumn Binding="{Binding Selected}" />
+                  <DataGridTextColumn Binding="{Binding Colour}" />
+                </DataGrid.Columns>
+              </DataGrid>
+            </Panel>
+            <Panel Grid.Column="1" Margin="15 45 0 0">
+              <TextBlock Text="Black logo:" Margin="5 5 0 0"
+                    FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+              <ComboBox PlaceholderText="Select the artwork" PlaceholderForeground="#8B8C8E" Margin="120 0 0 0" Width="350"
+                    SelectedItem="{Binding SelectedBlackLogo}" FontFamily="{StaticResource BarlowFont}" 
+                    FontSize="16" ItemsSource="{Binding PrintifyArtworks}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding FileName}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+              <Border CornerRadius="10" ClipToBounds="True">
+                <Panel Background="#E1E1E1" Height="150" Width="150" Margin="-320 20 0 0">
+                  <Border CornerRadius="5">
+                    <Image Width="130" Height="130" Stretch="Uniform"
+                            Margin="5" Source="{Binding SelectedBlackLogo.PreviewImage}"/>
+                  </Border>
+                </Panel>
+              </Border>
+            </Panel>
+          </Grid>
+        </Panel>
+      </Border>
     </StackPanel>
-  </DockPanel>
+  </ScrollViewer>
 </UserControl>
