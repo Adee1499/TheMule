@@ -35,16 +35,16 @@
           <DataGrid Grid.Column="0" Grid.Row="1" Name="VariantsColoursDataGrid" ItemsSource="{Binding VariantsColours}"
                     AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-              <DataGridCheckBoxColumn Binding="{Binding Selected}" />
-              <DataGridTextColumn Binding="{Binding Colour}" />
+              <DataGridCheckBoxColumn Binding="{Binding Selected}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" />
+              <DataGridTextColumn Binding="{Binding Colour}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" IsReadOnly="True" />
             </DataGrid.Columns>
           </DataGrid>
           <TextBlock Grid.Column="1" Grid.Row="0" Text="Sizes" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
           <DataGrid Grid.Column="1" Grid.Row="1" Name="VariantsSizesDataGrid" ItemsSource="{Binding VariantsSizes}"
                     AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-              <DataGridCheckBoxColumn Binding="{Binding Selected}" />
-              <DataGridTextColumn Binding="{Binding Size}" />
+              <DataGridCheckBoxColumn Binding="{Binding Selected}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" />
+              <DataGridTextColumn Binding="{Binding Size}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" IsReadOnly="True" />
             </DataGrid.Columns>
           </DataGrid>
         </Grid>

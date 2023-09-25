@@ -183,14 +183,12 @@ namespace TheMule.ViewModels.Printify
 
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK, "UK"));
-            /*
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU, "EU"));
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].US, "US"));
             await Product.CreateProductAsync(CreateProductObject(variants, 
                 SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU, "AU"));
-            */
         }
 
         private Product CreateProductObject(List<Product.ProductVariant> variants, AppSettings.BlueprintPrintProviderSettings blueprintSettings, string titlePrefix) {
@@ -245,7 +243,17 @@ namespace TheMule.ViewModels.Printify
                 Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, whiteNeckPlaceholder }
             };
 
-            return new Product($"{titlePrefix}_{_inputTitle!}", _selectedBlueprint!.Id, blueprintSettings.PrintProviderId, variants.ToArray(), new Product.ProductPrintArea[] { blackLogoPrintArea, whiteLogoPrintArea });
+            List<Product.ProductPrintArea> printAreas = new();
+
+            if (blackLogoPrintArea.Variants.Length > 0) printAreas.Add(blackLogoPrintArea);
+            if (whiteLogoPrintArea.Variants.Length > 0) printAreas.Add(whiteLogoPrintArea);
+
+            if (printAreas.Count > 0) {
+                return new Product($"({titlePrefix}) {_inputTitle!}", _selectedBlueprint!.Id, blueprintSettings.PrintProviderId, variants.ToArray(), printAreas.ToArray());
+            } else {
+                return null!;
+            }
+
         }
 
         public class VariantColour {
