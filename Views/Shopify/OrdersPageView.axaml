@@ -5,11 +5,15 @@
              mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="768"
              Width="1120" Height="768" Background="Transparent"
              x:Class="TheMule.Views.Shopify.OrdersPageView">
-  <DockPanel>
-    <StackPanel DockPanel.Dock="Top">
-      <TextBlock Text="Shopify Orders" />
-    </StackPanel>
-    <ListBox Background="Transparent"/>
-  </DockPanel>
+	<Panel>
+		<Border BorderBrush="Beige" BorderThickness="2" Width="600" Height="680" />
+		<Canvas Name="canvas" Width="600" Height="680" ClipToBounds="True"  >
+			<Image Name="movableImage" Source="C:\Users\Adrian\Downloads\CarpKoi.png" Width="400" Height="400"
+					PointerPressed="OnImagePointerPressed"
+				PointerMoved="OnImagePointerMoved" Canvas.Left="0" Canvas.Top="0"
+				PointerReleased="OnImagePointerReleased"/>
+		</Canvas>
+	    <Button Name="render" Content="RENDER" Click="OnRenderButtonClick" />
+	</Panel>
 </UserControl>
 
