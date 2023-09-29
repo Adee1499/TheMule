@@ -10,19 +10,19 @@ namespace TheMule.Services
 {
     public static class SettingsManager
     {
-        public static AppSettings appSettings;
+        public static AppSettings AppSettings;
         public static readonly string CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TheMule", "Cache");
 
         private static readonly string _settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TheMule", "settings.json");
 
         public static void SaveSettings() {
-            if (appSettings == null) return;
+            if (AppSettings == null) return;
 
             var settingsDirectory = Path.GetDirectoryName(_settingsFilePath);
             if (!Directory.Exists(settingsDirectory))
                 Directory.CreateDirectory(settingsDirectory);
 
-            var serializedSettings = JsonSerializer.Serialize(appSettings, new JsonSerializerOptions { WriteIndented = true });
+            var serializedSettings = JsonSerializer.Serialize(AppSettings, new JsonSerializerOptions { WriteIndented = true });
             serializedSettings = CleanUpSerializedReactiveObjectHack(serializedSettings);
             File.WriteAllText(_settingsFilePath, serializedSettings);
         }
@@ -31,7 +31,7 @@ namespace TheMule.Services
             if (!File.Exists(_settingsFilePath)) return;
 
             var serializedSettings = File.ReadAllText(_settingsFilePath);
-            appSettings = JsonSerializer.Deserialize<AppSettings>(serializedSettings);
+            AppSettings = JsonSerializer.Deserialize<AppSettings>(serializedSettings);
         }
 
         private static string CleanUpSerializedReactiveObjectHack(string json) {
@@ -43,21 +43,30 @@ namespace TheMule.Services
 
     public class AppSettings 
     {
-        public PrintifyServiceSettings PrintifyService { get; set; }
         public CloudflareSettings CloudflareService {  get; set; }
+        public PrintifyServiceSettings PrintifyService { get; set; }
+        public ShopifyServiceSettings ShopifyService {  get; set; }
         public PrintifySettings Printify { get; set; }
-
-        public class PrintifyServiceSettings
-        {
-            public string APIKey { get; set; }
-            public string ShopId { get; set; }
-        }
 
         public class CloudflareSettings 
         {
             public string AccessKey { get; set; }
             public string SecretKey { get; set; }
             public string PublicUrl { get; set; }
+        }
+
+        public class PrintifyServiceSettings
+        {
+            public string BaseUrl { get; set; }
+            public string APIKey { get; set; }
+            public string ShopId { get; set; }
+        }
+
+        public class ShopifyServiceSettings
+        {
+            public string BaseUrl { get; set; }
+            public string APIVersion { get; set; }
+            public string APIKey { get; set; }
         }
 
         public class PrintifySettings 

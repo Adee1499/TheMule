@@ -16,12 +16,12 @@ namespace TheMule.Services
         private static string? _publicUrl;
 
         internal static async Task<string> UploadFile(string filePath, string fileName) {
-            _publicUrl = SettingsManager.appSettings.CloudflareService.PublicUrl;
+            _publicUrl = SettingsManager.AppSettings.CloudflareService.PublicUrl;
 
             // AWS credentials setup
             var options = new CredentialProfileOptions {
-                AccessKey = SettingsManager.appSettings.CloudflareService.AccessKey,
-                SecretKey = SettingsManager.appSettings.CloudflareService.SecretKey
+                AccessKey = SettingsManager.AppSettings.CloudflareService.AccessKey,
+                SecretKey = SettingsManager.AppSettings.CloudflareService.SecretKey
             };
 
             var profile = new CredentialProfile("default", options);
@@ -82,8 +82,8 @@ namespace TheMule.Services
 
             // AWS credentials setup
             var options = new CredentialProfileOptions {
-                AccessKey = SettingsManager.appSettings.CloudflareService.AccessKey,
-                SecretKey = SettingsManager.appSettings.CloudflareService.SecretKey
+                AccessKey = SettingsManager.AppSettings.CloudflareService.AccessKey,
+                SecretKey = SettingsManager.AppSettings.CloudflareService.SecretKey
             };
 
             var profile = new CredentialProfile("default", options);

@@ -1,0 +1,156 @@
+﻿using System;
+using System.Text.Json.Serialization;
+
+namespace TheMule.Models.Shopify
+{
+    public class Product
+    {
+        [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int Id { get; set; }
+
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+
+        [JsonPropertyName("body_html")]
+        public string? BodyHTML { get; set; }
+
+        [JsonPropertyName("vendor")]
+        public string? Vendor { get; set; }
+
+        [JsonPropertyName("product_type")]
+        public string? ProductType { get; set; }
+
+        [JsonPropertyName("created_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public DateTime? CreatedAt { get; set; }
+
+        [JsonPropertyName("handle")]
+        public string? Handle { get; set; }
+
+        [JsonPropertyName("udpated_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public DateTime? UpdatedAt { get; set; }
+
+        [JsonPropertyName("published_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public DateTime? PublishedAt { get; set; }
+
+        [JsonPropertyName("template_suffix"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string? TemplateSuffix { get; set; }
+
+        [JsonPropertyName("published_scope"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string? PublishedScope { get; set; }
+
+        [JsonPropertyName("tags")]
+        public string? Tags { get; set; }
+
+        [JsonPropertyName("status"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string? Status { get; set; }
+
+        [JsonPropertyName("variants"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public ProductVariant[]? Variants { get; set; }
+
+        [JsonPropertyName("options"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public ProductOption[]? Options { get; set; }
+
+        [JsonPropertyName("images"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public ProductImage[]? Images { get; set; }
+
+        [JsonPropertyName("image"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public ProductImage? Image { get; set; }
+
+
+        public class ProductVariant
+        {
+            [JsonPropertyName("product_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int ProductId { get; set; }
+
+            [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int Id { get; set; }
+
+            [JsonPropertyName("title")]
+            public string? Title { get; set; }
+
+            [JsonPropertyName("price")]
+            public float? Price { get; set; }
+
+            [JsonPropertyName("sku")]
+            public string? SKU { get; set; }
+
+            [JsonPropertyName("compare_at_price")]
+            public float? CompareAtPrice { get; set; }
+
+            [JsonPropertyName("fulfillment_service")]
+            public string? FulfillmentService { get; set; }
+
+            [JsonPropertyName("option1")]
+            public string? Option1 { get; set; }
+
+            [JsonPropertyName("option2")]
+            public string? Option2 { get; set; }
+
+            [JsonPropertyName("option3")]
+            public string? Option3 { get; set; }
+
+            [JsonPropertyName("created_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public DateTime? CreatedAt { get; set; }
+
+            [JsonPropertyName("updated_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public DateTime? UpdatedAt { get; set; }
+
+            [JsonPropertyName("taxable")]
+            public bool? Taxable { get; set; }
+
+            [JsonPropertyName("grams")]
+            public int? Grams { get; set; }
+
+            [JsonPropertyName("image_id")]
+            public int? ImageId { get; set; }
+
+            [JsonPropertyName("weight")]
+            public float? Weight { get; set; }
+
+            [JsonPropertyName("weight_unit")]
+            public string? WeightUnit { get; set; }
+        }
+
+        public class ProductOption
+        {
+            [JsonPropertyName("product_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int ProductId { get; set; }
+
+            [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int Id { get; set; }
+
+            [JsonPropertyName("name")]
+            public string? Name { get; set; }
+
+            [JsonPropertyName("values")]
+            public string[]? Values { get; set; }
+        }
+
+        public class ProductImage
+        {
+            [JsonPropertyName("product_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int ProductId { get; set; }
+
+            [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int Id { get; set; }
+
+            [JsonPropertyName("created_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public DateTime? CreatedAt { get; set; }
+
+            [JsonPropertyName("udpated_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public DateTime? UpdatedAt { get; set; }
+
+            [JsonPropertyName("width"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int Width { get; set; }
+
+            [JsonPropertyName("height"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int Height { get; set; }
+
+            [JsonPropertyName("src"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public string? Source {  get; set; }
+
+            [JsonPropertyName("variant_ids")]
+            public int[]? VariantIds { get; set; }
+        }
+    }
+}

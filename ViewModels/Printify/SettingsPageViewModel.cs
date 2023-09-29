@@ -43,7 +43,7 @@ namespace TheMule.ViewModels.Printify
             {
                 this.RaiseAndSetIfChanged(ref _ukPrintProvider, value);
                 UKBlueprintSettings!.PrintProviderId = _ukPrintProvider!.Id;
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK = _ukBlueprintSettings!;
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK = _ukBlueprintSettings!;
                 SettingsManager.SaveSettings();
             }
         }
@@ -54,7 +54,7 @@ namespace TheMule.ViewModels.Printify
             {
                 this.RaiseAndSetIfChanged(ref _euPrintProvider, value);
                 EUBlueprintSettings!.PrintProviderId = _euPrintProvider!.Id;
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU = _euBlueprintSettings!;
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU = _euBlueprintSettings!;
                 SettingsManager.SaveSettings();
             }
         }
@@ -65,7 +65,7 @@ namespace TheMule.ViewModels.Printify
             {
                 this.RaiseAndSetIfChanged(ref _usPrintProvider, value);
                 USBlueprintSettings!.PrintProviderId = _usPrintProvider!.Id;
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].US = _usBlueprintSettings!;
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].US = _usBlueprintSettings!;
                 SettingsManager.SaveSettings();
             }
         }
@@ -76,7 +76,7 @@ namespace TheMule.ViewModels.Printify
             {
                 this.RaiseAndSetIfChanged(ref _auPrintProvider, value);
                 AUBlueprintSettings!.PrintProviderId = _auPrintProvider!.Id;
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU = _auBlueprintSettings!;
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU = _auBlueprintSettings!;
                 SettingsManager.SaveSettings();
             }
         }
@@ -129,7 +129,7 @@ namespace TheMule.ViewModels.Printify
             set {
                 this.RaiseAndSetIfChanged(ref _selectedWhiteLogo, value);
                 _selectedWhiteLogo.LoadPreview();
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.WhiteLogoArtworkId = _selectedWhiteLogo.Id;
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.WhiteLogoArtworkId = _selectedWhiteLogo.Id;
                 SettingsManager.SaveSettings();
             }
         }
@@ -138,7 +138,7 @@ namespace TheMule.ViewModels.Printify
             set {
                 this.RaiseAndSetIfChanged(ref _selectedBlackLogo, value);
                 _selectedBlackLogo.LoadPreview();
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoArtworkId = _selectedBlackLogo.Id;
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoArtworkId = _selectedBlackLogo.Id;
                 SettingsManager.SaveSettings();
             }
         }
@@ -209,8 +209,8 @@ namespace TheMule.ViewModels.Printify
 
             // Grab settings for the selected blueprint
             SettingsManager.LoadSettings();
-            if (SettingsManager.appSettings.Printify.Blueprints.ContainsKey(blueprintId)) {
-                BlueprintSettings blueprintSettings = SettingsManager.appSettings.Printify.Blueprints[blueprintId];
+            if (SettingsManager.AppSettings.Printify.Blueprints.ContainsKey(blueprintId)) {
+                BlueprintSettings blueprintSettings = SettingsManager.AppSettings.Printify.Blueprints[blueprintId];
                 UKBlueprintSettings = blueprintSettings.UK;
                 UKPrintProvider = AvailablePrintProviders.Where(pp => pp.Id.Equals(UKBlueprintSettings!.PrintProviderId)).First();
                 EUBlueprintSettings = blueprintSettings.EU;
@@ -229,7 +229,7 @@ namespace TheMule.ViewModels.Printify
                     SelectedBlackLogo = PrintifyArtworks.First(a => a.Id.Equals(blueprintSettings.LogoSettings.BlackLogoArtworkId));
             } else {
                 BlueprintSettings blueprintSettings = new BlueprintSettings();
-                SettingsManager.appSettings.Printify.Blueprints.Add(blueprintId, blueprintSettings);
+                SettingsManager.AppSettings.Printify.Blueprints.Add(blueprintId, blueprintSettings);
                 UKBlueprintSettings = blueprintSettings.UK;
                 UKPrintProvider = AvailablePrintProviders.Where(pp => pp.Id.Equals(0)).First();
                 EUBlueprintSettings = blueprintSettings.EU;
@@ -286,7 +286,7 @@ namespace TheMule.ViewModels.Printify
                 colours.Add(colourSelection.Colour, colourSelection.Selected);
             }
 
-            SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoColours = colours;
+            SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoColours = colours;
             SettingsManager.SaveSettings();
         }
 

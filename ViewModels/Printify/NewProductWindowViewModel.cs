@@ -27,7 +27,7 @@ namespace TheMule.ViewModels.Printify
             {
                 this.RaiseAndSetIfChanged(ref _selectedBlueprint, value);
                 // Get print providers for this blueprint from settings
-                var bpSettings = SettingsManager.appSettings.Printify.Blueprints[SelectedBlueprint!.Id];
+                var bpSettings = SettingsManager.AppSettings.Printify.Blueprints[SelectedBlueprint!.Id];
                 int[] printProvidersIds = new int[4];
                 printProvidersIds[0] = bpSettings.UK.PrintProviderId;
                 printProvidersIds[1] = bpSettings.EU.PrintProviderId;
@@ -80,7 +80,7 @@ namespace TheMule.ViewModels.Printify
 
             var blueprints = await Blueprint.GetBlueprintsAsync();
 
-            int[] setBlueprints = SettingsManager.appSettings.Printify.Blueprints.Keys.ToArray();
+            int[] setBlueprints = SettingsManager.AppSettings.Printify.Blueprints.Keys.ToArray();
 
             foreach (Blueprint blueprint in blueprints)
             {
@@ -182,13 +182,13 @@ namespace TheMule.ViewModels.Printify
             }
 
             await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK, "UK"));
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK, "UK"));
             await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU, "EU"));
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU, "EU"));
             await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].US, "US"));
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].US, "US"));
             await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU, "AU"));
+                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU, "AU"));
         }
 
         private Product CreateProductObject(List<Product.ProductVariant> variants, AppSettings.BlueprintPrintProviderSettings blueprintSettings, string titlePrefix) {
@@ -206,7 +206,7 @@ namespace TheMule.ViewModels.Printify
             };
 
             Product.ProductPlaceholderImage blackNeckPlaceholderImage = new Product.ProductPlaceholderImage {
-                Id = SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoArtworkId,
+                Id = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoArtworkId,
                 X = blueprintSettings.Placeholders.Neck.X,
                 Y = blueprintSettings.Placeholders.Neck.Y,
                 Scale = blueprintSettings.Placeholders.Neck.Scale,
@@ -214,7 +214,7 @@ namespace TheMule.ViewModels.Printify
             };
 
             Product.ProductPlaceholderImage whiteNeckPlaceholderImage = new Product.ProductPlaceholderImage {
-                Id = SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.WhiteLogoArtworkId,
+                Id = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.WhiteLogoArtworkId,
                 X = blueprintSettings.Placeholders.Neck.X,
                 Y = blueprintSettings.Placeholders.Neck.Y,
                 Scale = blueprintSettings.Placeholders.Neck.Scale,
@@ -231,7 +231,7 @@ namespace TheMule.ViewModels.Printify
                 Images = new Product.ProductPlaceholderImage[] { whiteNeckPlaceholderImage }
             };
 
-            Dictionary<string, bool> colourVariants = SettingsManager.appSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoColours;
+            Dictionary<string, bool> colourVariants = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoColours;
 
             Product.ProductPrintArea blackLogoPrintArea = new Product.ProductPrintArea {
                 Variants = variants.Where(v => colourVariants.ContainsKey(v.Title) && colourVariants[v.Title]).Select(v => v.Id).ToArray(),

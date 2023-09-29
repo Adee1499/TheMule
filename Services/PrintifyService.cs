@@ -17,15 +17,15 @@ namespace TheMule.Services
 
         private static void InitializeRestClient() {
             SettingsManager.LoadSettings();
-            var authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(SettingsManager.appSettings.PrintifyService.APIKey, "Bearer");
+            var authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(SettingsManager.AppSettings.PrintifyService.APIKey, "Bearer");
 
-            var options = new RestClientOptions("https://api.printify.com/v1/") {
+            var options = new RestClientOptions(SettingsManager.AppSettings.PrintifyService.BaseUrl) {
                 Authenticator = authenticator
             };
 
             _client = new RestClient(options);
 
-            _shopId = SettingsManager.appSettings.PrintifyService.ShopId;
+            _shopId = SettingsManager.AppSettings.PrintifyService.ShopId;
         }
 
         public static async Task<List<Artwork>> GetArtworksAsync() {
