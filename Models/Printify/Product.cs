@@ -92,10 +92,7 @@ namespace TheMule.Models.Printify
             PrintAreas = printAreas;
         }
 
-        public static async Task<IEnumerable<Product>> GetProductsAsync() 
-        {
-            return await PrintifyService.GetProductsAsync();
-        }
+        public static async Task<IEnumerable<Product>> GetProductsAsync() => await PrintifyService.GetProductsAsync();
 
         private static HttpClient s_httpClient = new();
         private string CachePath => $"{SettingsManager.CachePath}/{Id}";

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheMule.Models.Shopify;
 
 namespace TheMule.Services
 {
@@ -13,18 +14,19 @@ namespace TheMule.Services
         private static void InitializeRestClient() 
         {
             SettingsManager.LoadSettings();
+            _apiVersion = SettingsManager.AppSettings.ShopifyService.APIVersion;
 
             _client = new RestClient(SettingsManager.AppSettings.ShopifyService.BaseUrl);
-            _apiVersion = SettingsManager.AppSettings.ShopifyService.APIVersion;
+            _client.AddDefaultHeader("X-Shopify-Access-Token", SettingsManager.AppSettings.ShopifyService.APIKey);
         }
 
-        public static async Task<List<string>> GetProductsAsync()
+        public static async Task<List<Product>> GetProductsAsync()
         {
             if (_client == null) InitializeRestClient();
 
-            var response = await _client!.GetJsonAsync<string[]>($"admin/api/{_apiVersion}/products.json");
+            var response = await _client!.GetJsonAsync<ProductResponse>($"admin/api/{_apiVersion}/products.json");
 
-            return response!.ToList();
+            return response!.Products?.ToList() ?? new List<Product>();
         }
     }
 }

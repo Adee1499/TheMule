@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using TheMule.Services;
 
 namespace TheMule.Models.Shopify
 {
     public class Product
     {
         [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        [JsonPropertyName("title"), JsonRequired]
+        public string Title { get; set; }
 
-        [JsonPropertyName("body_html")]
-        public string? BodyHTML { get; set; }
+        [JsonPropertyName("body_html"), JsonRequired]
+        public string BodyHTML { get; set; }
 
         [JsonPropertyName("vendor")]
         public string? Vendor { get; set; }
@@ -57,13 +63,62 @@ namespace TheMule.Models.Shopify
         public ProductImage? Image { get; set; }
 
 
+        [JsonConstructor]
+        public Product(
+            long id, string title, string bodyHtml, string? vendor, string? productType, DateTime? createdAt, 
+            string? handle, DateTime? updatedAt, DateTime? publishedAt, string? tags, string? status, ProductVariant[]? variants,
+            ProductImage[]? images, ProductImage? image)
+        {
+            Id = id; 
+            Title = title;
+            BodyHTML = bodyHtml;
+            Vendor = vendor;
+            ProductType = productType;
+            CreatedAt = createdAt;
+            Handle = handle;
+            UpdatedAt = updatedAt;
+            PublishedAt = publishedAt;
+            Tags = tags;
+            Status = status;
+            Variants = variants;
+            Images = images;
+            Image = image;
+        }
+
+        public static async Task<IEnumerable<Product>> GetProductsAsync() => await ShopifyService.GetProductsAsync();
+
+        private static HttpClient s_httpClient = new();
+        private string CachePath => $"{SettingsManager.CachePath}/{Id}";
+
+        public async Task<Stream> LoadPreviewImageAsync()
+        {
+            if (File.Exists($"{CachePath}-{Title}.png")) {
+                return File.OpenRead($"{CachePath}-{Title}.png");
+            } else {
+                if (Image?.Source != null) {
+                    var data = await s_httpClient.GetByteArrayAsync(Image?.Source);
+                    return new MemoryStream(data);
+                }
+                return null;
+            }
+        }
+
+        public Stream SavePreviewImageStream()
+        {
+            if (!Directory.Exists($"{SettingsManager.CachePath}")) {
+                Directory.CreateDirectory($"{SettingsManager.CachePath}");
+            }
+
+            return File.OpenWrite($"{CachePath}-{Title}.png");
+        }
+
         public class ProductVariant
         {
             [JsonPropertyName("product_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public int ProductId { get; set; }
+            public long ProductId { get; set; }
 
             [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public int Id { get; set; }
+            public long Id { get; set; }
 
             [JsonPropertyName("title")]
             public string? Title { get; set; }
@@ -102,7 +157,7 @@ namespace TheMule.Models.Shopify
             public int? Grams { get; set; }
 
             [JsonPropertyName("image_id")]
-            public int? ImageId { get; set; }
+            public long? ImageId { get; set; }
 
             [JsonPropertyName("weight")]
             public float? Weight { get; set; }
@@ -114,10 +169,10 @@ namespace TheMule.Models.Shopify
         public class ProductOption
         {
             [JsonPropertyName("product_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public int ProductId { get; set; }
+            public long ProductId { get; set; }
 
             [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public int Id { get; set; }
+            public long Id { get; set; }
 
             [JsonPropertyName("name")]
             public string? Name { get; set; }
@@ -129,10 +184,10 @@ namespace TheMule.Models.Shopify
         public class ProductImage
         {
             [JsonPropertyName("product_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public int ProductId { get; set; }
+            public long ProductId { get; set; }
 
             [JsonPropertyName("id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public int Id { get; set; }
+            public long Id { get; set; }
 
             [JsonPropertyName("created_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public DateTime? CreatedAt { get; set; }
@@ -150,7 +205,13 @@ namespace TheMule.Models.Shopify
             public string? Source {  get; set; }
 
             [JsonPropertyName("variant_ids")]
-            public int[]? VariantIds { get; set; }
+            public long[]? VariantIds { get; set; }
         }
+    }
+
+    public class ProductResponse
+    {
+        [JsonPropertyName("products")]
+        public Product[] Products { get; set; }
     }
 }

@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:TheMule.ViewModels.Shopify"
+             mc:Ignorable="d" d:DesignWidth="1120" d:DesignHeight="100"
+			 Width="1120" Height="100"
+             x:Class="TheMule.Views.Shopify.ProductView"
+             x:DataType="vm:ProductViewModel">
+	<StackPanel Spacing="5" Width="1060" Orientation="Horizontal" Height="100">
+		<ToolTip.Tip>
+			<StackPanel>
+				<Grid ColumnDefinitions="Auto,5,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+					<TextBlock Grid.Row="0" Grid.Column="0" Text="Title:" />
+					<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding ProductName}" />
+					<TextBlock Grid.Row="1" Grid.Column="0" Text="Tags:" />
+					<TextBlock Grid.Row="1" Grid.Column="2" Text="Tags" TextWrapping="Wrap" />
+					<TextBlock Grid.Row="2" Grid.Column="0" Text="Created at:" />
+					<TextBlock Grid.Row="2" Grid.Column="2" Text="Created At" TextWrapping="Wrap" />
+					<TextBlock Grid.Row="3" Grid.Column="0" Text="Updated at:" />
+					<TextBlock Grid.Row="3" Grid.Column="2" Text="UpdatedAt" TextWrapping="Wrap" />
+				</Grid>
+			</StackPanel>
+		</ToolTip.Tip>
+		<Border CornerRadius="10" ClipToBounds="True" ToolTip.Placement="Pointer" Height="85" Width="85">
+			<Panel Background="#3f4a55" Height="85" Width="85">
+				<Panel Background="Transparent" Height="85" VerticalAlignment="Top">
+					<Border CornerRadius="7" Height="75" Width="75" ClipToBounds="True">
+						<Image Width="75" Height="75" Stretch="Uniform"
+							   Margin="5" Source="{Binding Image}" />
+					</Border>
+					<Panel Height="80" IsVisible="{Binding Image, Converter={x:Static ObjectConverters.IsNull}}">
+						<PathIcon Height="65" Width="65" Data="{StaticResource hanger_regular}" />
+					</Panel>
+				</Panel>
+			</Panel>
+		</Border>
+		<StackPanel Orientation="Horizontal">
+			<StackPanel Orientation="Vertical" Margin="15,15,0,0" Width="400">
+				<TextBlock HorizontalAlignment="Left" TextAlignment="Center" FontFamily="{StaticResource BarlowFont}"
+							FontSize="18" Padding="2">
+					<TextBlock.Text>
+						<Binding Path="ProductName" FallbackValue="Highland Cow - Unisex Heave Crewneck Sweat..." />
+					</TextBlock.Text>
+				</TextBlock>
+				<TextBlock HorizontalAlignment="Left" Text="{Binding ProductType}" FontFamily="{StaticResource BarlowFont}"
+							FontSize="12" Padding="3">
+					<TextBlock.Text>
+						<Binding Path="ProductType" FallbackValue="T-Shirt" />
+					</TextBlock.Text>
+				</TextBlock>
+				<TextBlock HorizontalAlignment="Left" FontFamily="{StaticResource BarlowFont}"
+							FontSize="12" Padding="3">
+					<TextBlock.Text>
+						<Binding Path="Variants" FallbackValue="2 colors  •  5 sizes  •  Total 10 variants" />
+					</TextBlock.Text>
+				</TextBlock>
+			</StackPanel>
+			<Panel VerticalAlignment="Center" Width="100">
+				<Border BorderThickness="2.5" Padding="5,2,5,2" CornerRadius="10" Width="90">
+					<Border.Background>
+						<Binding Path="StatusBackground" FallbackValue="#47FCC6"/>
+					</Border.Background>
+					<Border.BorderBrush>
+						<Binding Path="StatusForeground" FallbackValue="#08543D"/>
+					</Border.BorderBrush>
+					<TextBlock HorizontalAlignment="Center" FontFamily="{StaticResource BarlowFont}" FontSize="15">
+						<TextBlock.Foreground>
+							<Binding Path="StatusForeground" FallbackValue="#08543D"/>
+						</TextBlock.Foreground>
+						<TextBlock.Text>
+							<Binding Path="StatusText" FallbackValue="Active"/>
+						</TextBlock.Text>
+					</TextBlock>
+				</Border>
+			</Panel>
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="350,0,0,0">
+				<PathIcon Data="{StaticResource pricetag_regular}" Height="100">
+					<PathIcon.RenderTransform>
+						<RotateTransform Angle="20" />
+					</PathIcon.RenderTransform>
+				</PathIcon>
+				<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" TextAlignment="Right"
+						   FontFamily="{StaticResource BarlowFont}" FontSize="18" Margin="10,0,0,0">
+					<TextBlock.Text>
+						<Binding Path="Price" FallbackValue="£20.00"/>
+					</TextBlock.Text>
+				</TextBlock>
+			</StackPanel>
+		</StackPanel>
+	</StackPanel>
+</UserControl>
