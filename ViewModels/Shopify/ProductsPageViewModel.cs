@@ -1,7 +1,9 @@
 ﻿using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
+using System.Windows.Input;
 using TheMule.Models.Shopify;
 
 namespace TheMule.ViewModels.Shopify
@@ -15,6 +17,8 @@ namespace TheMule.ViewModels.Shopify
             get => _selectedProduct;
             set => this.RaiseAndSetIfChanged(ref _selectedProduct, value);
         }
+        public Interaction<NewProductWindowViewModel, ProductViewModel?> ShowNewProductDialog { get; }
+        public ICommand CreateNewProductCommand { get; }
 
         private bool _isBusy;
         public bool IsBusy
@@ -32,6 +36,14 @@ namespace TheMule.ViewModels.Shopify
         public ProductsPageViewModel()
         {
             ShopifyProductsCount = $"Shopify Products: {ShopifyProducts.Count}";
+            ShowNewProductDialog = new Interaction<NewProductWindowViewModel, ProductViewModel?>();
+
+            CreateNewProductCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                var newProductDialog = new NewProductWindowViewModel();
+
+                var result = await ShowNewProductDialog.Handle(newProductDialog);
+            });
 
             FetchProducts();
         }
