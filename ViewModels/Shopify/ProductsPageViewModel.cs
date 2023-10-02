@@ -2,16 +2,17 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Windows.Input;
 using TheMule.Models.Shopify;
+using TheMule.Services;
 
 namespace TheMule.ViewModels.Shopify
 {
     public class ProductsPageViewModel : ViewModelBase
     {
+        private readonly ServiceMediator _mediator;
         private ProductViewModel? _selectedProduct;
-        public ObservableCollection<ProductViewModel> ShopifyProducts { get; } = new();
+        public ObservableCollection<ProductViewModel> ShopifyProducts => _mediator.ShopifyProducts;
         public ProductViewModel? SelectedProduct
         {
             get => _selectedProduct;
@@ -33,8 +34,9 @@ namespace TheMule.ViewModels.Shopify
             set => this.RaiseAndSetIfChanged(ref _shopifyProductsCount, value);
         }
 
-        public ProductsPageViewModel()
+        public ProductsPageViewModel(ServiceMediator mediator)
         {
+            _mediator = mediator;
             ShopifyProductsCount = $"Shopify Products: {ShopifyProducts.Count}";
             ShowNewProductDialog = new Interaction<NewProductWindowViewModel, ProductViewModel?>();
 
