@@ -5,15 +5,16 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Input;
 using TheMule.Models.Printify;
-using TheMule.Views.Printify;
-using Tmds.DBus.Protocol;
+using TheMule.Services;
 
 namespace TheMule.ViewModels.Printify
 {
     public class ProductsPageViewModel : ViewModelBase
     {
+        private readonly ServiceMediator _mediator;
+
         private ProductViewModel? _selectedProduct;
-        public ObservableCollection<ProductViewModel> PrintifyProducts { get; } = new();
+        public ObservableCollection<ProductViewModel> PrintifyProducts => _mediator.PrintifyProducts;
         public ProductViewModel? SelectedProduct
         {
             get => _selectedProduct;
@@ -37,14 +38,15 @@ namespace TheMule.ViewModels.Printify
 
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public ProductsPageViewModel()
+        public ProductsPageViewModel(ServiceMediator mediator)
         {
+            _mediator = mediator;
             PrintifyProductsCount = $"Printify Products: {PrintifyProducts.Count}";
             ShowNewProductDialog = new Interaction<NewProductWindowViewModel, ProductViewModel?>();
 
             CreateNewProductCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                var newProductDialog = new NewProductWindowViewModel();
+                var newProductDialog = new NewProductWindowViewModel(mediator);
 
                 var result = await ShowNewProductDialog.Handle(newProductDialog);
             });

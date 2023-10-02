@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -12,6 +11,7 @@ namespace TheMule.ViewModels.Printify
 {
     public class NewProductWindowViewModel : ViewModelBase
     {
+        private readonly ServiceMediator _mediator;
         private string? _inputTitle;
         public string? InputTitle {
             get => _inputTitle;
@@ -19,7 +19,9 @@ namespace TheMule.ViewModels.Printify
         }
 
         private Blueprint? _selectedBlueprint;
-        public ObservableCollection<Blueprint> PrintifyBlueprints { get; } = new();
+        public ObservableCollection<Blueprint> PrintifyBlueprints => _mediator.PrintifyBlueprints;
+        public ObservableCollection<PrintProvider> PrintProviders => _mediator.PrintProviders;
+        public ObservableCollection<ArtworkViewModel> PrintifyArtworks => _mediator.PrintifyArtworks;
         public Blueprint? SelectedBlueprint
         {
             get => _selectedBlueprint;
@@ -36,7 +38,6 @@ namespace TheMule.ViewModels.Printify
                 FetchPrintProviders(printProvidersIds);
             }
         }
-        public ObservableCollection<PrintProvider> PrintProviders { get; } = new();
 
 
         private List<Blueprint.BlueprintVariant> _availableVariants = new();
@@ -44,7 +45,6 @@ namespace TheMule.ViewModels.Printify
         public ObservableCollection<VariantSize> VariantsSizes { get; } = new();
 
         private ArtworkViewModel? _selectedArtwork;
-        public ObservableCollection<ArtworkViewModel> PrintifyArtworks { get; } = new();
         public ArtworkViewModel? SelectedArtwork {
             get => _selectedArtwork;
             set {
@@ -63,7 +63,8 @@ namespace TheMule.ViewModels.Printify
 
         public ReactiveCommand<Unit, Product[]?> CreateProductCommand { get; }
 
-        public NewProductWindowViewModel() {
+        public NewProductWindowViewModel(ServiceMediator mediator) {
+            _mediator = mediator;
             CreateProductCommand = ReactiveCommand.Create(() => {
                 CreateProductsAsync();
                 return _newProducts;

@@ -8,13 +8,16 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Input;
 using TheMule.Models.Printify;
+using TheMule.Services;
 
 namespace TheMule.ViewModels.Printify
 {
     public class ArtworksPageViewModel : ViewModelBase
     {
+        private readonly ServiceMediator _mediator;
+
         private ArtworkViewModel? _selectedArtwork;
-        public ObservableCollection<ArtworkViewModel> PrintifyArtworks { get; } = new();
+        public ObservableCollection<ArtworkViewModel> PrintifyArtworks => _mediator.PrintifyArtworks;
         public ArtworkViewModel? SelectedArtwork
         {
             get => _selectedArtwork;
@@ -38,8 +41,9 @@ namespace TheMule.ViewModels.Printify
 
         private CancellationTokenSource? _cancellationTokenSource;
 
-        public ArtworksPageViewModel()
+        public ArtworksPageViewModel(ServiceMediator mediator)
         {
+            _mediator = mediator;
             PrintifyArtworksCount = $"Printify Artworks: {PrintifyArtworks.Count}";
             OpenFileDialog = new Interaction<Unit, IStorageFile?>();
             OpenFileDialogCommand = ReactiveCommand.CreateFromTask(async () =>

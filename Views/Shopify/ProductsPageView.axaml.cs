@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using System.Threading.Tasks;
+using TheMule.Services;
 using TheMule.ViewModels.Shopify;
 
 namespace TheMule.Views.Shopify
@@ -10,7 +11,7 @@ namespace TheMule.Views.Shopify
     public partial class ProductsPageView : ReactiveUserControl<ProductsPageViewModel>
     {
         public ProductsPageView() {
-            DataContext = new ProductsPageViewModel();
+            DataContext = new ProductsPageViewModel(ServiceMediator.Instance);
             InitializeComponent();
             this.WhenActivated(action => action(ViewModel!.ShowNewProductDialog.RegisterHandler(DoShowNewProductDialog)));
         }

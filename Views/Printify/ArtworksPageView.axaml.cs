@@ -4,6 +4,7 @@ using Avalonia.ReactiveUI;
 using ReactiveUI;
 using System.Reactive;
 using System.Threading.Tasks;
+using TheMule.Services;
 using TheMule.ViewModels.Printify;
 
 namespace TheMule.Views.Printify
@@ -11,7 +12,7 @@ namespace TheMule.Views.Printify
     public partial class ArtworksPageView : ReactiveUserControl<ArtworksPageViewModel>
     {
         public ArtworksPageView() {
-            DataContext = new ArtworksPageViewModel();
+            DataContext = new ArtworksPageViewModel(ServiceMediator.Instance);
             InitializeComponent();
             this.WhenActivated(action => action(ViewModel!.OpenFileDialog.RegisterHandler(OpenFileDialogAsync!)));
         }
