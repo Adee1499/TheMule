@@ -29,8 +29,8 @@ namespace TheMule.ViewModels.Printify
             get => _isBusy;
             set => this.RaiseAndSetIfChanged(ref _isBusy, value);
         }
-        private string _printifyProductsCount;
-        public string PrintifyProductsCount
+        private string? _printifyProductsCount;
+        public string? PrintifyProductsCount
         {
             get => _printifyProductsCount;
             set => this.RaiseAndSetIfChanged(ref _printifyProductsCount, value);
