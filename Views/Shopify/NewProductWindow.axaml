@@ -12,7 +12,7 @@
         ExtendClientAreaToDecorationsHint="True">
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top" Height="55">
-			<TextBlock Text="Create New Product" FontFamily="{StaticResource BarlowFont}" FontSize="24"
+			<TextBlock Text="Create New Shopify Product" FontFamily="{StaticResource BarlowFont}" FontSize="24"
 					   VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#FFF27A" Margin="20 10 0 20" />
 			<Line StartPoint="20, 0" EndPoint="980, 0" Stroke="#23292f" />
 		</StackPanel>
@@ -20,55 +20,39 @@
 			<Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
 				<TextBlock Grid.Row="0" Text="Title" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
 				<TextBox Grid.Row="1" Width="950" Watermark="Product title" FontSize="16"
-						 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" Text="Binding InputTitle" />
-				<TextBlock Grid.Row="2" Text="Blueprint" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-				<ComboBox Grid.Row="3" Width="950" PlaceholderText="Select a blueprint" PlaceholderForeground="#8b8c8e"
-						 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="Binding PrintifyBlueprints">
+						 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" Text="{Binding InputTitle}" />
+				<TextBlock Grid.Row="2" Text="Printify Product" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+				<ComboBox Grid.Row="3" Width="950" PlaceholderText="Select a Printify product" PlaceholderForeground="#8b8c8e"
+						 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding UniquePrintifyProducts}">
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
-							<TextBlock Text="Binding ComboBoxText" />
+              <StackPanel Spacing="5" Orientation="Horizontal" Height="70">
+                <Border CornerRadius="10" ClipToBounds="True" Height="60" Width="60">
+                  <Panel Background="Transparent" Height="60" VerticalAlignment="Top">
+                    <Border CornerRadius="7" Height="75" Width="75" ClipToBounds="True">
+                      <Image Width="60" Height="60" Stretch="UniformToFill"
+                            Margin="0" Source="{Binding PreviewImage}" />
+                    </Border>
+                  </Panel>
+                </Border>
+                <StackPanel Orientation="Horizontal" Height="70">
+                  <StackPanel Orientation="Vertical" Margin="15,0,0,0" Width="400">
+                    <TextBlock HorizontalAlignment="Left" Text="{Binding ProductName}" FontFamily="{StaticResource BarlowFont}"
+                          FontSize="18" Padding="0" />
+                    <TextBlock HorizontalAlignment="Left" Text="{Binding CreatedAtText}" FontFamily="{StaticResource BarlowFont}"
+                          FontSize="12" Padding="7 5 0 5" />
+                    <TextBlock HorizontalAlignment="Left" Text="{Binding UpdatedAtText}" FontFamily="{StaticResource BarlowFont}"
+                          FontSize="12" Padding="7 5 0 5" />
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
 						</DataTemplate>
 					</ComboBox.ItemTemplate>
 				</ComboBox>
 				<Grid Grid.Row="4" ColumnDefinitions="1*,1*" RowDefinitions="Auto Auto">
 					<TextBlock Grid.Column="0" Grid.Row="0" Text="Colours" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-					<DataGrid Grid.Column="0" Grid.Row="1" Name="VariantsColoursDataGrid" 
-							  AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
-						<DataGrid.Columns>
-							<DataGridCheckBoxColumn CanUserReorder="False" CanUserResize="False" CanUserSort="False" />
-							<DataGridTextColumn CanUserReorder="False" CanUserResize="False" CanUserSort="False" IsReadOnly="True" />
-						</DataGrid.Columns>
-					</DataGrid>
 					<TextBlock Grid.Column="1" Grid.Row="0" Text="Sizes" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-					<DataGrid Grid.Column="1" Grid.Row="1" Name="VariantsSizesDataGrid" 
-							  AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
-						<DataGrid.Columns>
-							<DataGridCheckBoxColumn CanUserReorder="False" CanUserResize="False" CanUserSort="False" />
-							<DataGridTextColumn CanUserReorder="False" CanUserResize="False" CanUserSort="False" IsReadOnly="True" />
-						</DataGrid.Columns>
-					</DataGrid>
 				</Grid>
-				<TextBlock Grid.Row="5" Text="Artwork" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-				<StackPanel Grid.Row="6" Grid.Column="0" Orientation="Vertical">
-					<ComboBox Width="645" PlaceholderText="Select an artwork" PlaceholderForeground="#8b8c8e"
-							 Margin="5 30 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="Binding PrintifyArtworks">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<TextBlock Text="Binding FileName" />
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-					<Button Content="Create product" Margin="250 25 0 10" FontFamily="{StaticResource BarlowFont}"
-							Padding="20" FontSize="20" Foreground="#FFF27A" Background="#23292f" CornerRadius="10" />
-				</StackPanel>
-				<Border Grid.Row="6" Grid.Column="1" CornerRadius="10" ClipToBounds="True">
-					<Panel Background="#23292F" Height="200" Width="200" Margin="660 0 0 0">
-						<Border CornerRadius="5">
-							<Image Width="170" Height="170" Stretch="Uniform"
-								   Margin="15" />
-						</Border>
-					</Panel>
-				</Border>
 			</Grid>
 		</Panel>
 	</DockPanel>

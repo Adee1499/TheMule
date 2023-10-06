@@ -16,6 +16,12 @@
 
   <Application.Resources>
     <FontFamily x:Key="BarlowFont">avares://TheMule/Assets/Fonts#Barlow</FontFamily>
-    <Color x:Key="SystemAccentColor">#FFF27A</Color>
+    <Color x:Key="SystemAccentColor">#c9bf5d</Color>
+    <Color x:Key="SystemAccentColorDark1">#3640a2</Color>
+    <Color x:Key="SystemAccentColorDark2">#3640a2</Color>
+    <Color x:Key="SystemAccentColorDark3">#3640a2</Color>
+    <Color x:Key="SystemAccentColorLight1">#c9bf5d</Color>
+    <Color x:Key="SystemAccentColorLight2">#c9bf5d</Color>
+    <Color x:Key="SystemAccentColorLight3">#c9bf5d</Color>
   </Application.Resources>
 </Application>

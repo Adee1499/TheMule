@@ -70,8 +70,11 @@ namespace TheMule.ViewModels.Printify
                 return _newProducts;
             });
 
-            FetchBlueprints();
-            FetchArtworks();
+            if (mediator.PrintifyBlueprints.Count <= 0)
+                FetchBlueprints();
+
+            if (mediator.PrintifyArtworks.Count <= 0)
+                FetchArtworks();
         }
 
         private async void FetchBlueprints() { 
@@ -83,11 +86,10 @@ namespace TheMule.ViewModels.Printify
 
             int[] setBlueprints = SettingsManager.AppSettings.Printify.Blueprints.Keys.ToArray();
 
-            foreach (Blueprint blueprint in blueprints)
-            {
-                if (setBlueprints.Contains(blueprint.Id))
-                {
-                    PrintifyBlueprints.Add(blueprint);
+            foreach(int blueprintId in setBlueprints) {
+                Blueprint? bp = blueprints.FirstOrDefault(x => x.Id.Equals(blueprintId));
+                if (bp != null) {
+                    PrintifyBlueprints.Add(bp);
                 }
             }
 

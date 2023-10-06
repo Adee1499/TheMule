@@ -42,7 +42,7 @@ namespace TheMule.ViewModels.Shopify
 
             CreateNewProductCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                var newProductDialog = new NewProductWindowViewModel();
+                var newProductDialog = new NewProductWindowViewModel(ServiceMediator.Instance);
 
                 var result = await ShowNewProductDialog.Handle(newProductDialog);
             });

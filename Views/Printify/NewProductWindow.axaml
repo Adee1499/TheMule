@@ -6,13 +6,13 @@
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
         Width="1000" Height="700" x:DataType="vm:NewProductWindowViewModel"
         x:Class="TheMule.Views.Printify.NewProductWindow"
-        Title="PrintifyProductNewWindow"
+        Title="PrintifyProductNewWindow" CanResize="False"
         Background="#0D1116" WindowStartupLocation="CenterOwner"
         TransparencyLevelHint="AcrylicBlur"
         ExtendClientAreaToDecorationsHint="True">
   <DockPanel>
     <StackPanel DockPanel.Dock="Top" Height="55">
-        <TextBlock Text="Create New Product" FontFamily="{StaticResource BarlowFont}" FontSize="24"
+        <TextBlock Text="Create New Printify Product" FontFamily="{StaticResource BarlowFont}" FontSize="24"
                    VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#FFF27A" Margin="20 10 0 20" />
       <Line StartPoint="20, 0" EndPoint="980, 0" Stroke="#23292f" />
     </StackPanel>
@@ -32,21 +32,31 @@
         </ComboBox>
         <Grid Grid.Row="4" ColumnDefinitions="1*,1*" RowDefinitions="Auto Auto">
           <TextBlock Grid.Column="0" Grid.Row="0" Text="Colours" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-          <DataGrid Grid.Column="0" Grid.Row="1" Name="VariantsColoursDataGrid" ItemsSource="{Binding VariantsColours}"
-                    AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
-            <DataGrid.Columns>
-              <DataGridCheckBoxColumn Binding="{Binding Selected}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" />
-              <DataGridTextColumn Binding="{Binding Colour}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" IsReadOnly="True" />
-            </DataGrid.Columns>
-          </DataGrid>
+          <Line Grid.Column="0" Grid.Row="0"  StartPoint="5,30" EndPoint="460,30" Stroke="#33363b" />
+			    <ListBox Grid.Column="0" Grid.Row="1" Name="VariantsColoursListBox" ItemsSource="{Binding VariantsColours}"
+					     Margin="5 0 15 20" Height="160" Background="Transparent">
+				    <ListBox.ItemTemplate>
+					    <DataTemplate>
+						    <StackPanel Orientation="Horizontal" Height="10">
+							    <CheckBox IsChecked="{Binding Selected}" />
+							    <TextBlock Text="{Binding Colour}" VerticalAlignment="Center" Margin="10 0 0 0" />
+						    </StackPanel>
+					    </DataTemplate>
+				    </ListBox.ItemTemplate>
+			    </ListBox>
           <TextBlock Grid.Column="1" Grid.Row="0" Text="Sizes" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-          <DataGrid Grid.Column="1" Grid.Row="1" Name="VariantsSizesDataGrid" ItemsSource="{Binding VariantsSizes}"
-                    AutoGenerateColumns="False" Margin="5 10 5 20" HeadersVisibility="None" Height="160" VerticalScrollBarVisibility="Auto">
-            <DataGrid.Columns>
-              <DataGridCheckBoxColumn Binding="{Binding Selected}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" />
-              <DataGridTextColumn Binding="{Binding Size}" CanUserReorder="False" CanUserResize="False" CanUserSort="False" IsReadOnly="True" />
-            </DataGrid.Columns>
-          </DataGrid>
+          <Line Grid.Column="1" Grid.Row="0"  StartPoint="5,30" EndPoint="460,30" Stroke="#33363b" />
+          <ListBox Grid.Column="1" Grid.Row="1" Name="VariantsSizesListBox" ItemsSource="{Binding VariantsSizes}"
+					     Margin="5 0 15 20" Height="160" Background="Transparent">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Horizontal" Height="10">
+                  <CheckBox IsChecked="{Binding Selected}" />
+                  <TextBlock Text="{Binding Size}" VerticalAlignment="Center" Margin="10 0 0 0" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </Grid>
         <TextBlock Grid.Row="5" Text="Artwork" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
         <StackPanel Grid.Row="6" Grid.Column="0" Orientation="Vertical">

@@ -34,7 +34,9 @@ namespace TheMule.ViewModels.Printify
         public string ProductNameFull => _printifyProduct.Title;
         public string Tags => string.Join(", ", _printifyProduct.Tags!);
         public string CreatedAt => _printifyProduct.CreatedAt.ToLocalTime().ToString();
+        public string CreatedAtText => $"Created: {_printifyProduct.CreatedAt:f}";
         public string UpdatedAt => _printifyProduct.UpdatedAt.ToLocalTime().ToString();
+        public string UpdatedAtText => $"Updated: {_printifyProduct.UpdatedAt:f}";
 
         public string BlueprintDetails => $"{_printifyProduct.PrintProviderId} • {_printifyProduct.BlueprintId}";
 
