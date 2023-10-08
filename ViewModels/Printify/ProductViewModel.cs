@@ -37,6 +37,8 @@ namespace TheMule.ViewModels.Printify
         public string CreatedAtText => $"Created: {_printifyProduct.CreatedAt:f}";
         public string UpdatedAt => _printifyProduct.UpdatedAt.ToLocalTime().ToString();
         public string UpdatedAtText => $"Updated: {_printifyProduct.UpdatedAt:f}";
+        public Product.ProductVariant[] Variants => _printifyProduct.Variants;
+        public Product.ProductOption[] Options => _printifyProduct.Options;
 
         public string BlueprintDetails => $"{_printifyProduct.PrintProviderId} • {_printifyProduct.BlueprintId}";
 

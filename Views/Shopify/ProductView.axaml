@@ -43,8 +43,7 @@
 						<Binding Path="ProductName" FallbackValue="Highland Cow - Unisex Heave Crewneck Sweat..." />
 					</TextBlock.Text>
 				</TextBlock>
-				<TextBlock HorizontalAlignment="Left" Text="{Binding ProductType}" FontFamily="{StaticResource BarlowFont}"
-							FontSize="12" Padding="3">
+				<TextBlock HorizontalAlignment="Left" FontFamily="{StaticResource BarlowFont}" FontSize="12" Padding="3">
 					<TextBlock.Text>
 						<Binding Path="ProductType" FallbackValue="T-Shirt" />
 					</TextBlock.Text>

@@ -50,6 +50,7 @@ namespace TheMule.Services
 
         public class CloudflareSettings 
         {
+            public string BaseUrl { get; set; }
             public string AccessKey { get; set; }
             public string SecretKey { get; set; }
             public string PublicUrl { get; set; }

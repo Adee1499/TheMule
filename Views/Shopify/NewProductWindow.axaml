@@ -1,3 +1,4 @@
+
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -23,7 +24,8 @@
 						 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" Text="{Binding InputTitle}" />
 				<TextBlock Grid.Row="2" Text="Printify Product" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
 				<ComboBox Grid.Row="3" Width="950" PlaceholderText="Select a Printify product" PlaceholderForeground="#8b8c8e"
-						 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" ItemsSource="{Binding UniquePrintifyProducts}">
+						 Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" FontSize="16" 
+                  SelectedItem="{Binding SelectedPrintifyProduct}" ItemsSource="{Binding UniquePrintifyProducts}">
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
               <StackPanel Spacing="5" Orientation="Horizontal" Height="70">
@@ -49,10 +51,42 @@
 						</DataTemplate>
 					</ComboBox.ItemTemplate>
 				</ComboBox>
-				<Grid Grid.Row="4" ColumnDefinitions="1*,1*" RowDefinitions="Auto Auto">
+				<Grid Grid.Row="4" ColumnDefinitions="1*,1*,2*" RowDefinitions="Auto Auto">
 					<TextBlock Grid.Column="0" Grid.Row="0" Text="Colours" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
-					<TextBlock Grid.Column="1" Grid.Row="0" Text="Sizes" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+			    <ListBox Grid.Column="0" Grid.Row="1" Name="OptionsColoursListBox" ItemsSource="{Binding OptionsColours}" CornerRadius="3"
+					     Margin="-20 10 0 0" Height="160" Background="#080A0D" BorderBrush="#99FFFFFF" BorderThickness="1" Width="210">
+				    <ListBox.ItemTemplate>
+					    <DataTemplate>
+							    <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+					    </DataTemplate>
+				    </ListBox.ItemTemplate>
+			    </ListBox>
+					<TextBlock Grid.Column="1" Grid.Row="0" Text="Sizes"
+                     FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+			    <ListBox Grid.Column="1" Grid.Row="1" Name="OptionsSizesListBox" ItemsSource="{Binding OptionsSizes}" CornerRadius="3"
+					     Margin="-20 10 0 0" Height="160" Background="#080A0D" BorderBrush="#99FFFFFF" BorderThickness="1" Width="210">
+				    <ListBox.ItemTemplate>
+					    <DataTemplate>
+							    <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+					    </DataTemplate>
+				    </ListBox.ItemTemplate>
+			    </ListBox>
+          <TextBlock Grid.Column="2" Grid.Row="0" Text="Description" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+          <TextBox Grid.Column="2" Grid.Row="1" Height="160" AcceptsReturn="True" Margin="0 10 0 0"
+                   FontFamily="{StaticResource BarlowFont}" TextWrapping="WrapWithOverflow" FontSize="16" 
+                   Watermark="A description of the product..." Width="470" Text="{Binding InputDescription}" />
 				</Grid>
+        <Grid Grid.Row="5" ColumnDefinitions="1*,1*,2*" RowDefinitions="Auto,Auto" Margin="0 15 0 0">
+          <TextBlock Grid.Column="0" Grid.Row="0" Text="Price" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+          <TextBox Grid.Column="0" Grid.Row="1" FontFamily="{StaticResource BarlowFont}" FontSize="16" Margin="5 10 25 20"
+                   Name="PriceTextBox" Watermark="£0.00" Text="{Binding InputPrice, Mode=TwoWay}" KeyDown="PriceTextBox_KeyDown" />
+          <TextBlock Grid.Column="1" Grid.Row="0" Text="Status" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+          <ComboBox Grid.Column="1" Grid.Row="1" FontFamily="{StaticResource BarlowFont}" FontSize="16" Background="#080A0D" Width="210"
+                    CornerRadius="3" BorderBrush="#99FFFFFF" BorderThickness="1" Margin="5 10 25 20" ItemsSource="{Binding ProductStatusOptions}" />
+          <TextBlock Grid.Column="2" Grid.Row="0" Text="Tags" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
+          <TextBox Grid.Column="2" Grid.Row="1" Watermark="Comma separated tags" FontFamily="{StaticResource BarlowFont}" FontSize="16"
+						 Margin="5 10 5 20" Width="470" />
+        </Grid>
 			</Grid>
 		</Panel>
 	</DockPanel>

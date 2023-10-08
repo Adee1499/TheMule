@@ -29,8 +29,7 @@ namespace TheMule.Services
             sharedFile.RegisterProfile(profile);
 
             // Create the RestSharp client
-            string baseUrl = "https://28093bfdc7a0c50ad7147518bf3b319b.r2.cloudflarestorage.com/";
-            _client = new RestClient(baseUrl);
+            _client = new RestClient(SettingsManager.AppSettings.CloudflareService.BaseUrl);
 
             byte[] imageData = File.ReadAllBytes(filePath);
 
@@ -56,7 +55,7 @@ namespace TheMule.Services
             };
 
             var signer = new AWS4SignerForAuthorizationHeader {
-                EndpointUri = new Uri(baseUrl + request.Resource),
+                EndpointUri = new Uri(_client.Options.BaseUrl + request.Resource),
                 HttpMethod = "PUT",
                 Service = "s3",
                 Region = "auto"
