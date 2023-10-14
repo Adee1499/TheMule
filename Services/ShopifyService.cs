@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TheMule.Models.Shopify;
@@ -37,7 +38,7 @@ namespace TheMule.Services
 
 	        ProductRequest newProductRequest = new ProductRequest(newProduct);
 
-	        string jsonBody = JsonSerializer.Serialize(newProductRequest);
+	        string jsonBody = JsonSerializer.Serialize(newProductRequest).Replace("\\u003d", "=");
 
 	        var request = new RestRequest
 	        {

@@ -1,7 +1,6 @@
 ﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -11,8 +10,36 @@ namespace TheMule.Services
     public static class SettingsManager
     {
         public static AppSettings AppSettings;
-        public static readonly string CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TheMule", "Cache");
+        private static readonly string CachePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TheMule", "Cache");
 
+        public static string PrintifyCachePath
+        {
+	        get
+	        {
+		        string printifyCachePath = Path.Combine(CachePath, "Printify");
+		        if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+		        if (!Directory.Exists(printifyCachePath)) Directory.CreateDirectory(printifyCachePath);
+		        string printifyProductCachePath = Path.Combine(printifyCachePath, "Products");
+		        if (!Directory.Exists(printifyProductCachePath)) Directory.CreateDirectory(printifyProductCachePath);
+		        string printifyArtworkCachePath = Path.Combine(printifyCachePath, "Artworks");
+		        if (!Directory.Exists(printifyArtworkCachePath)) Directory.CreateDirectory(printifyArtworkCachePath);
+		        return printifyCachePath;
+	        }
+        }
+
+        public static string ShopifyCachePath
+        {
+	        get
+	        {
+		        string shopifyCachePath = Path.Combine(CachePath, "Shopify");
+		        if (!Directory.Exists(CachePath)) Directory.CreateDirectory(CachePath);
+		        if (!Directory.Exists(shopifyCachePath)) Directory.CreateDirectory(shopifyCachePath);
+		        string shopifyProductCachePath = Path.Combine(shopifyCachePath, "Products");
+		        if (!Directory.Exists(shopifyProductCachePath)) Directory.CreateDirectory(shopifyProductCachePath);
+		        return shopifyCachePath;
+	        }
+        }
+        
         private static readonly string _settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "TheMule", "settings.json");
 
         public static void SaveSettings() {

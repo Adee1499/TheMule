@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TheMule.Services;
 using TheMule.Shared;
@@ -95,11 +96,13 @@ namespace TheMule.Models.Printify
         public static async Task<IEnumerable<Product>> GetProductsAsync() => await PrintifyService.GetProductsAsync();
 
         private static HttpClient s_httpClient = new();
-        private string CachePath => $"{SettingsManager.CachePath}/{Id}";
+        private string CachePath => $"{SettingsManager.PrintifyCachePath}/Products/{Id}";
 
-        public async Task<Stream> LoadPreviewImageAsync() {
-            if (File.Exists($"{CachePath}-{Title}.png")) {
-                return File.OpenRead($"{CachePath}-{Title}.png");
+        public async Task<Stream> LoadPreviewImageAsync()
+        {
+	        string filePath = $"{CachePath}-{Variants[0].Id}-preview";
+            if (File.Exists(filePath)) {
+                return File.OpenRead(filePath);
             } else {
                 var data = await s_httpClient.GetByteArrayAsync(Images[0].Url);
                 return new MemoryStream(data);
@@ -107,11 +110,8 @@ namespace TheMule.Models.Printify
         }
 
         public Stream SavePreviewImageStream() {
-            if (!Directory.Exists($"{SettingsManager.CachePath}")) {
-                Directory.CreateDirectory($"{SettingsManager.CachePath}");
-            }
-
-            return File.OpenWrite($"{CachePath}-{Title}.png");
+	        string filePath = $"{CachePath}-{Variants[0].Id}-preview";
+            return File.OpenWrite(filePath);
         }
 
         public static async Task<bool> CreateProductAsync(Product newProduct) {
@@ -206,6 +206,40 @@ namespace TheMule.Models.Printify
 
             [JsonPropertyName("is_default")]
             public bool IsDefault { get; set; }
+
+            private static HttpClient s_httpClient = new();
+
+            private string _cameraLabel => Url.Substring(Url.LastIndexOf('=') + 1);
+            
+            private string _cachePath
+            {
+	            get
+	            {
+		            string pattern = @"([^/]{24})";
+		            Match match = Regex.Match(Url, pattern);
+
+		            if (match.Success)
+			            return $"{SettingsManager.PrintifyCachePath}/Products/{match.Value}-{Variants[0]}-{_cameraLabel}";
+
+		            return string.Empty;
+	            }
+            } 
+
+            public async Task<Stream> LoadImageAsync()
+            {
+	            if (File.Exists($"{_cachePath}")) {
+		            return File.OpenRead($"{_cachePath}");
+	            } else {
+		            var data = await s_httpClient.GetByteArrayAsync(Url);
+		            SaveImage(data);
+		            return new MemoryStream(data);
+	            }
+            }
+
+            public async void SaveImage(byte[] imageData)
+            {
+	            await File.WriteAllBytesAsync($"{_cachePath}", imageData);
+            }
         }
 
         public class ProductPrintArea 

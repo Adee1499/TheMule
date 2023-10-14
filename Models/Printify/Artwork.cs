@@ -62,13 +62,13 @@ namespace TheMule.Models.Printify
         }
 
         private static HttpClient s_httpClient = new();
-        private string CachePath => $"{SettingsManager.CachePath}/{Id}";
+        private string CachePath => $"{SettingsManager.PrintifyCachePath}/Artworks/{Id}";
 
         public async Task<Stream> LoadPreviewImageAsync()
         {
-            if (File.Exists($"{CachePath}-{FileName}"))
+            if (File.Exists($"{CachePath}"))
             {
-                return File.OpenRead($"{CachePath}-{FileName}");
+                return File.OpenRead($"{CachePath}");
             }
             else
             {
@@ -79,12 +79,7 @@ namespace TheMule.Models.Printify
 
         public Stream SavePreviewImageStream()
         {
-            if (!Directory.Exists($"{SettingsManager.CachePath}"))
-            {
-                Directory.CreateDirectory($"{SettingsManager.CachePath}");
-            }
-
-            return File.OpenWrite($"{CachePath}-{FileName}");
+            return File.OpenWrite($"{CachePath}");
         }
 
         public async Task<bool> ArchiveArtworkAsync()
@@ -94,7 +89,8 @@ namespace TheMule.Models.Printify
 
         public static async Task<Artwork> UploadArtworkAsync(string filePath, string fileName)
         {
-            string cloudflareResourceUrl = await CloudflareService.UploadFile(filePath, fileName);
+	        string contentType = "image/png";
+            string cloudflareResourceUrl = await CloudflareService.UploadFromFile(filePath, fileName, contentType);
             if (cloudflareResourceUrl.StartsWith("Error")) return null!;
             Artwork newArtwork = new Artwork(fileName, cloudflareResourceUrl);
             if (await PrintifyService.UploadArtworkAsync(newArtwork)) {

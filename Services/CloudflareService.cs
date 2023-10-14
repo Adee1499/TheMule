@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace TheMule.Services
@@ -15,7 +16,21 @@ namespace TheMule.Services
 
         private static string? _publicUrl;
 
-        internal static async Task<string> UploadFile(string filePath, string fileName) {
+        internal static async Task<string> UploadFromFile(string filePath, string fileName, string contentType)
+        {
+	        byte[] imageData = File.ReadAllBytes(filePath);
+		    return await Upload(imageData, fileName, contentType);
+        }
+        
+        internal static async Task<string> UploadFromUrl(string sourceUrl, string fileName, string contentType)
+        {
+	        using (var webClient = new WebClient()) {
+		        byte[] imageData = webClient.DownloadData(sourceUrl);
+		        return await Upload(imageData, fileName, contentType);
+	        }
+        }
+        
+        internal static async Task<string> Upload(byte[] imageData, string fileName, string contentType) {
             _publicUrl = SettingsManager.AppSettings.CloudflareService.PublicUrl;
 
             // AWS credentials setup
@@ -31,14 +46,12 @@ namespace TheMule.Services
             // Create the RestSharp client
             _client = new RestClient(SettingsManager.AppSettings.CloudflareService.BaseUrl);
 
-            byte[] imageData = File.ReadAllBytes(filePath);
-
             // precompute hash of the body content
             var contentHash = AWS4SignerBase.CanonicalRequestHashAlgorithm.ComputeHash(imageData);
             var contentHashString = AWS4SignerBase.ToHexString(contentHash, true);
 
             var request = new RestRequest($"pod-library/{fileName}", Method.Put);
-            request.AddHeader("content-type", "image/png");
+            request.AddHeader("content-type", contentType);
             request.AddHeader(AWS4SignerBase.X_Amz_Content_SHA256, contentHashString);
             request.AddHeader("content-length", imageData.Length.ToString());
 
@@ -50,7 +63,7 @@ namespace TheMule.Services
             var headers = new Dictionary<string, string>
             {
                 { AWS4SignerBase.X_Amz_Content_SHA256, contentHashString },
-                { "content-type", "image/png" },
+                { "content-type", contentType },
                 { "content-length", imageData.Length.ToString() }
             };
 
@@ -66,7 +79,7 @@ namespace TheMule.Services
             // place the computed signature into a formatted 'Authorization' header and call S3
             request.AddHeader("Authorization", authorization);
 
-            request.AddParameter("image/png", imageData, ParameterType.RequestBody);
+            request.AddParameter(contentType, imageData, ParameterType.RequestBody);
             
             var response = await _client.ExecuteAsync(request);
 

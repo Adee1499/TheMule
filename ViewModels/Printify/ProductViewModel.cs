@@ -39,6 +39,7 @@ namespace TheMule.ViewModels.Printify
         public string UpdatedAtText => $"Updated: {_printifyProduct.UpdatedAt:f}";
         public Product.ProductVariant[] Variants => _printifyProduct.Variants;
         public Product.ProductOption[] Options => _printifyProduct.Options;
+        public Product.ProductImage[] Images => _printifyProduct.Images;
 
         public string BlueprintDetails => $"{_printifyProduct.PrintProviderId} • {_printifyProduct.BlueprintId}";
 

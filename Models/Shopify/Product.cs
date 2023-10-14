@@ -89,12 +89,13 @@ namespace TheMule.Models.Shopify
         public static async Task<IEnumerable<Product>> GetProductsAsync() => await ShopifyService.GetProductsAsync();
 
         private static HttpClient s_httpClient = new();
-        private string CachePath => $"{SettingsManager.CachePath}/{Id}";
+        private string _cachePath => $"{SettingsManager.ShopifyCachePath}/Products/{Id}";
 
         public async Task<Stream> LoadPreviewImageAsync()
         {
-            if (File.Exists($"{CachePath}-{Title}.png")) {
-                return File.OpenRead($"{CachePath}-{Title}.png");
+	        string filePath = $"{_cachePath}-preview";
+            if (File.Exists(filePath)) {
+                return File.OpenRead(filePath);
             } else {
                 if (Image?.Source != null) {
                     var data = await s_httpClient.GetByteArrayAsync(Image?.Source);
@@ -106,11 +107,8 @@ namespace TheMule.Models.Shopify
 
         public Stream SavePreviewImageStream()
         {
-            if (!Directory.Exists($"{SettingsManager.CachePath}")) {
-                Directory.CreateDirectory($"{SettingsManager.CachePath}");
-            }
-
-            return File.OpenWrite($"{CachePath}-{Title}.png");
+	        string filePath = $"{_cachePath}-preview";
+            return File.OpenWrite(filePath);
         }
 
         public static async Task<bool> CreateProductAsync(Product newProduct)
@@ -132,22 +130,22 @@ namespace TheMule.Models.Shopify
             [JsonPropertyName("price")]
             public float? Price { get; set; }
 
-            [JsonPropertyName("sku")]
-            public string? SKU { get; set; }
+            [JsonPropertyName("sku"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public string? Sku { get; set; }
 
-            [JsonPropertyName("compare_at_price")]
+            [JsonPropertyName("compare_at_price"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public float? CompareAtPrice { get; set; }
 
-            [JsonPropertyName("fulfillment_service")]
+            [JsonPropertyName("fulfillment_service"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string? FulfillmentService { get; set; }
 
             [JsonPropertyName("option1")]
             public string? Option1 { get; set; }
 
-            [JsonPropertyName("option2")]
+            [JsonPropertyName("option2"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public string? Option2 { get; set; }
 
-            [JsonPropertyName("option3")]
+            [JsonPropertyName("option3"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public string? Option3 { get; set; }
 
             [JsonPropertyName("created_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -156,19 +154,19 @@ namespace TheMule.Models.Shopify
             [JsonPropertyName("updated_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public DateTime? UpdatedAt { get; set; }
 
-            [JsonPropertyName("taxable")]
+            [JsonPropertyName("taxable"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public bool? Taxable { get; set; }
 
-            [JsonPropertyName("grams")]
+            [JsonPropertyName("grams"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public int? Grams { get; set; }
 
-            [JsonPropertyName("image_id")]
+            [JsonPropertyName("image_id"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public long? ImageId { get; set; }
 
-            [JsonPropertyName("weight")]
+            [JsonPropertyName("weight"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public float? Weight { get; set; }
 
-            [JsonPropertyName("weight_unit")]
+            [JsonPropertyName("weight_unit"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string? WeightUnit { get; set; }
         }
 
@@ -198,7 +196,7 @@ namespace TheMule.Models.Shopify
             [JsonPropertyName("created_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public DateTime? CreatedAt { get; set; }
 
-            [JsonPropertyName("udpated_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            [JsonPropertyName("updated_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public DateTime? UpdatedAt { get; set; }
 
             [JsonPropertyName("width"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -210,7 +208,7 @@ namespace TheMule.Models.Shopify
             [JsonPropertyName("src"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public string? Source {  get; set; }
 
-            [JsonPropertyName("variant_ids")]
+            [JsonPropertyName("variant_ids"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public long[]? VariantIds { get; set; }
         }
     }

@@ -1,7 +1,10 @@
-﻿using ReactiveUI;
+﻿using System.Collections.Generic;
+using ReactiveUI;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reactive;
 using TheMule.Models.Printify;
 using TheMule.Services;
@@ -52,7 +55,7 @@ namespace TheMule.ViewModels.Shopify
 						transformedValue = transformedValue.Remove(transformedValue.LastIndexOf('.'), 1);
 					}
 
-					this.RaiseAndSetIfChanged(ref _inputPrice, "£" + transformedValue);
+					this.RaiseAndSetIfChanged(ref _inputPrice, transformedValue);
 				} else {
 					this.RaiseAndSetIfChanged(ref _inputPrice, value);
 				}
@@ -92,6 +95,8 @@ namespace TheMule.ViewModels.Shopify
 						}
 					}
 				}
+				// Grab images
+				FetchPrintifyImages();
 			}
 		}
 
@@ -112,6 +117,8 @@ namespace TheMule.ViewModels.Shopify
 
 		public ReactiveCommand<Unit, Models.Shopify.Product?> CreateProductCommand { get; }
 
+		public ObservableCollection<NewProductImageViewModel> NewProductImages { get; } = new();
+		
 		public NewProductWindowViewModel(ServiceMediator mediator)
 		{
 			_mediator = mediator;
@@ -141,16 +148,75 @@ namespace TheMule.ViewModels.Shopify
 			IsBusy = false;
 		}
 
+		private async void FetchPrintifyImages()
+		{
+			NewProductImages.Clear();
+			NewProductImages.Add(new NewProductImageViewModel());
+			foreach (var image in SelectedPrintifyProduct.Images) {
+				Stream imageData = await image.LoadImageAsync();
+				var vm = new NewProductImageViewModel(imageData);
+				NewProductImages.Add(vm);
+			}
+		}
+
 		private async void CreateProductAsync()
 		{
+			// Create variants
+			List<Models.Shopify.Product.ProductVariant> productVariants = new();
+			
+			foreach (var colour in OptionsColours) {
+				foreach (var size in OptionsSizes) {
+					productVariants.Add(new Models.Shopify.Product.ProductVariant
+					{
+						Title = $"{colour} / {size}",
+						Option1 = colour,
+						Option2 = size,
+						Price = float.Parse(InputPrice)
+					});
+				}
+			}
+			
+			// Create options
+			Models.Shopify.Product.ProductOption[] productOptions =
+			{
+				new()
+				{
+					Name = "Colour",
+					Values = OptionsColours.ToArray()
+				},
+				new()
+				{
+					Name = "Size",
+					Values = OptionsSizes.ToArray()
+				}
+			};
+			
+			// Get images
+			List<Models.Shopify.Product.ProductImage> productImages = new();
+			
+			foreach (var image in SelectedPrintifyProduct.Images) {
+				// Upload to Cloudflare R2
+				string r2Url = await CloudflareService.UploadFromUrl(image.Url, image.Variants[0] + image.Position, "image/jpeg");
+				
+				// Create list of R2 Urls
+				productImages.Add(new Models.Shopify.Product.ProductImage
+				{
+					Source = r2Url
+				});
+			}
+			
+			// Create a product
 			Models.Shopify.Product newShopifyProduct = new Models.Shopify.Product
 			{
 				Title = InputTitle,
 				BodyHtml = InputDescription,
 				Tags = InputTags,
-				Status = SelectedProductStatus.ToLower(),
+				Status = SelectedProductStatus?.ToLower(),
 				ProductType = "T-Shirt",
-				Vendor = "Aodach Avenue"
+				Vendor = "Aodach Avenue",
+				Variants = productVariants.ToArray(),
+				Options = productOptions,
+				Images = productImages.ToArray()
 			};
 
 			await Models.Shopify.Product.CreateProductAsync(newShopifyProduct);

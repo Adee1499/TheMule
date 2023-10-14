@@ -17,7 +17,7 @@
             <Line StartPoint="20, 0" EndPoint="980, 0" Stroke="#23292f" />
         </StackPanel>
         <Panel Margin="20 25 20 10">
-            <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            <Grid ColumnDefinitions="Auto" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                 <TextBlock Grid.Row="0" Text="Title" FontFamily="{StaticResource BarlowFont}" FontSize="16" />
                 <TextBox Grid.Row="1" Width="950" Watermark="Product title" FontSize="16"
                          Margin="5 10 5 20" FontFamily="{StaticResource BarlowFont}" Text="{Binding InputTitle}" />
@@ -105,7 +105,17 @@
                              FontFamily="{StaticResource BarlowFont}" FontSize="16"
                              Margin="5 10 5 20" Width="470" Text="{Binding InputTags}" />
                 </Grid>
-                <Button Grid.Row="6" Content="Create product" Margin="0" FontFamily="{StaticResource BarlowFont}"
+                <Grid Grid.Row="6" ColumnDefinitions="Auto,*,Auto" HorizontalAlignment="Stretch">
+                    <ListBox ItemsSource="{Binding NewProductImages}" 
+                             Background="Transparent" Margin="50 10" Width="900">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </Grid>
+                <Button Grid.Row="7" Content="Create product" Margin="0" FontFamily="{StaticResource BarlowFont}"
                         Padding="20" FontSize="20" Foreground="#FFF27A" Background="#23292f" CornerRadius="10"
                         Command="{Binding CreateProductCommand}"/>
             </Grid>
