@@ -9,264 +9,293 @@ using TheMule.Services;
 
 namespace TheMule.ViewModels.Printify
 {
-    public class NewProductWindowViewModel : ViewModelBase
-    {
-        private readonly ServiceMediator _mediator;
-        private string? _inputTitle;
-        public string? InputTitle {
-            get => _inputTitle;
-            set => this.RaiseAndSetIfChanged(ref _inputTitle, value);
-        }
+	public class NewProductWindowViewModel : ViewModelBase
+	{
+		private readonly ServiceMediator _mediator;
+		private string? _inputTitle;
 
-        private Blueprint? _selectedBlueprint;
-        public ObservableCollection<Blueprint> PrintifyBlueprints => _mediator.PrintifyBlueprints;
-        public ObservableCollection<PrintProvider> PrintProviders => _mediator.PrintProviders;
-        public ObservableCollection<ArtworkViewModel> PrintifyArtworks => _mediator.PrintifyArtworks;
-        public Blueprint? SelectedBlueprint
-        {
-            get => _selectedBlueprint;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _selectedBlueprint, value);
-                // Get print providers for this blueprint from settings
-                var bpSettings = SettingsManager.AppSettings.Printify.Blueprints[SelectedBlueprint!.Id];
-                int[] printProvidersIds = new int[4];
-                printProvidersIds[0] = bpSettings.UK.PrintProviderId;
-                printProvidersIds[1] = bpSettings.EU.PrintProviderId;
-                printProvidersIds[2] = bpSettings.US.PrintProviderId;
-                printProvidersIds[3] = bpSettings.AU.PrintProviderId;
-                FetchPrintProviders(printProvidersIds);
-            }
-        }
+		public string? InputTitle
+		{
+			get => _inputTitle;
+			set => this.RaiseAndSetIfChanged(ref _inputTitle, value);
+		}
 
+		private Blueprint? _selectedBlueprint;
+		public ObservableCollection<Blueprint> PrintifyBlueprints => _mediator.PrintifyBlueprints;
+		public ObservableCollection<PrintProvider> PrintProviders => _mediator.PrintProviders;
+		public ObservableCollection<ArtworkViewModel> PrintifyArtworks => _mediator.PrintifyArtworks;
 
-        private List<Blueprint.BlueprintVariant> _availableVariants = new();
-        public ObservableCollection<VariantColour> VariantsColours { get; } = new();
-        public ObservableCollection<VariantSize> VariantsSizes { get; } = new();
-
-        private ArtworkViewModel? _selectedArtwork;
-        public ArtworkViewModel? SelectedArtwork {
-            get => _selectedArtwork;
-            set {
-                this.RaiseAndSetIfChanged(ref _selectedArtwork, value);
-                _selectedArtwork.LoadPreview();
-            }
-        }
-
-        private Product[]? _newProducts;
-
-        private bool _isBusy;
-        public bool IsBusy {
-            get => _isBusy;
-            set => this.RaiseAndSetIfChanged(ref _isBusy, value);
-        }
-
-        public ReactiveCommand<Unit, Product[]?> CreateProductCommand { get; }
-
-        public NewProductWindowViewModel(ServiceMediator mediator) {
-            _mediator = mediator;
-            CreateProductCommand = ReactiveCommand.Create(() => {
-                CreateProductsAsync();
-                return _newProducts;
-            });
-
-            if (mediator.PrintifyBlueprints.Count <= 0)
-                FetchBlueprints();
-
-            if (mediator.PrintifyArtworks.Count <= 0)
-                FetchArtworks();
-        }
-
-        private async void FetchBlueprints() { 
-            IsBusy = true;
-
-            PrintifyBlueprints.Clear();
-
-            var blueprints = await Blueprint.GetBlueprintsAsync();
-
-            int[] setBlueprints = SettingsManager.AppSettings.Printify.Blueprints.Keys.ToArray();
-
-            foreach(int blueprintId in setBlueprints) {
-                Blueprint? bp = blueprints.FirstOrDefault(x => x.Id.Equals(blueprintId));
-                if (bp != null) {
-                    PrintifyBlueprints.Add(bp);
-                }
-            }
-
-            IsBusy = false;
-        }
-
-        private async void FetchArtworks() {
-            IsBusy = true;
-
-            PrintifyArtworks.Clear();
-
-            var artworks = await Artwork.GetArtworksAsync();
-
-            foreach (var artwork in artworks) {
-                var vm = new ArtworkViewModel(artwork);
-                PrintifyArtworks.Add(vm);
-            }
-
-            IsBusy = false;
-        }
-
-        private async void FetchPrintProviders(int[] printProvidersIds)
-        {
-            PrintProviders.Clear();
-            _availableVariants.Clear();
-
-            var printProviders = await PrintProvider.GetPrintProvidersAsync();
-
-            List<IEnumerable<Blueprint.BlueprintVariant>> variantsList = new();
-
-            foreach (PrintProvider printProvider in printProviders)
-            {
-                if (printProvidersIds.Contains(printProvider.Id))
-                {
-                    PrintProviders.Add(printProvider);
-                    variantsList.Add(await Blueprint.BlueprintVariant.GetVariantsAsync(SelectedBlueprint!.Id, printProvider.Id));
-                }
-            }
+		public Blueprint? SelectedBlueprint
+		{
+			get => _selectedBlueprint;
+			set
+			{
+				this.RaiseAndSetIfChanged(ref _selectedBlueprint, value);
+				// Get print providers for this blueprint from settings
+				var bpSettings = SettingsManager.AppSettings.Printify.Blueprints[SelectedBlueprint!.Id];
+				int[] printProvidersIds = new int[4];
+				printProvidersIds[0] = bpSettings.UK.PrintProviderId;
+				printProvidersIds[1] = bpSettings.EU.PrintProviderId;
+				printProvidersIds[2] = bpSettings.US.PrintProviderId;
+				printProvidersIds[3] = bpSettings.AU.PrintProviderId;
+				FetchPrintProviders(printProvidersIds);
+			}
+		}
 
 
-            // Check if there's at least one list of variants
-            if (variantsList.Count > 0)
-            {
-                // Initialize availableVariants with the first list as a starting point
-                _availableVariants.AddRange(variantsList.First());
+		private List<Blueprint.BlueprintVariant> _availableVariants = new();
+		public ObservableCollection<VariantColour> VariantsColours { get; } = new();
+		public ObservableCollection<VariantSize> VariantsSizes { get; } = new();
 
-                // Iterate through the rest of the lists and find common variants
-                foreach (var variants in variantsList.Skip(1))
-                {
-                    // Use LINQ's Intersect to find common variants by Id
-                    _availableVariants = _availableVariants
-                        .Join(variants, av => av.Options.Colour, v => v.Options.Colour, (av, v) => av)
-                        .ToList();
-                }
-            }
+		private ArtworkViewModel? _selectedArtwork;
 
-            List<string> colours = _availableVariants
-                .Select(variant => variant.Options.Colour)
-                .Distinct()
-                .ToList();
+		public ArtworkViewModel? SelectedArtwork
+		{
+			get => _selectedArtwork;
+			set
+			{
+				this.RaiseAndSetIfChanged(ref _selectedArtwork, value);
+				_selectedArtwork.LoadPreview();
+			}
+		}
 
-            foreach (string colour in colours) {
-                VariantsColours.Add(new VariantColour { Colour = colour, Selected = false });
-            }
+		private Product[]? _newProducts;
 
-            List<string> sizes = _availableVariants
-                .Select(variant => variant.Options.Size)
-                .Distinct()
-                .ToList();
+		private bool _isBusy;
 
-            foreach (string size in sizes) {
-                VariantsSizes.Add(new VariantSize { Size = size, Selected = false });
-            }
-        }
+		public bool IsBusy
+		{
+			get => _isBusy;
+			set => this.RaiseAndSetIfChanged(ref _isBusy, value);
+		}
 
-        private async void CreateProductsAsync() {
-            Debug.WriteLine("Creating products");
+		public ReactiveCommand<Unit, Product[]?> CreateProductCommand { get; }
 
-            // Create 4 products on Printify, one for each market
-            List<Product.ProductVariant> variants = new();
+		public NewProductWindowViewModel(ServiceMediator mediator)
+		{
+			_mediator = mediator;
+			CreateProductCommand = ReactiveCommand.Create(() =>
+			{
+				CreateProductsAsync();
+				return _newProducts;
+			});
 
-            foreach (VariantColour colour in VariantsColours) {
-                if (colour.Selected) {
-                    foreach (VariantSize size in VariantsSizes) {
-                        if (size.Selected) {
-                            var variant = _availableVariants.FirstOrDefault(v => v.Options.Colour.Equals(colour.Colour) && v.Options.Size.Equals(size.Size));
-                            if (variant != null) {
-                                variants.Add(new Product.ProductVariant(variant.Id, variant.Options.Colour));
-                            }
-                        }
-                    }
-                }
-            }
+			if (mediator.PrintifyBlueprints.Count <= 0)
+				FetchBlueprints();
 
-            await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK, "UK"));
-            await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU, "EU"));
-            await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].US, "US"));
-            await Product.CreateProductAsync(CreateProductObject(variants, 
-                SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU, "AU"));
-        }
+			if (mediator.PrintifyArtworks.Count <= 0)
+				FetchArtworks();
+		}
 
-        private Product CreateProductObject(List<Product.ProductVariant> variants, AppSettings.BlueprintPrintProviderSettings blueprintSettings, string titlePrefix) {
-            Product.ProductPlaceholderImage frontPlaceholderImage = new Product.ProductPlaceholderImage {
-                Id = _selectedArtwork!.Id,
-                X = blueprintSettings.Placeholders.Front.X,
-                Y = blueprintSettings.Placeholders.Front.Y,
-                Scale = blueprintSettings.Placeholders.Front.Scale,
-                Angle = blueprintSettings.Placeholders.Front.Angle
-            };
+		private async void FetchBlueprints()
+		{
+			IsBusy = true;
 
-            Product.ProductPlaceholder frontPlaceholder = new Product.ProductPlaceholder {
-                Position = "front",
-                Images = new Product.ProductPlaceholderImage[] { frontPlaceholderImage }
-            };
+			PrintifyBlueprints.Clear();
 
-            Product.ProductPlaceholderImage blackNeckPlaceholderImage = new Product.ProductPlaceholderImage {
-                Id = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoArtworkId,
-                X = blueprintSettings.Placeholders.Neck.X,
-                Y = blueprintSettings.Placeholders.Neck.Y,
-                Scale = blueprintSettings.Placeholders.Neck.Scale,
-                Angle = blueprintSettings.Placeholders.Neck.Angle
-            };
+			var blueprints = await Blueprint.GetBlueprintsAsync();
 
-            Product.ProductPlaceholderImage whiteNeckPlaceholderImage = new Product.ProductPlaceholderImage {
-                Id = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.WhiteLogoArtworkId,
-                X = blueprintSettings.Placeholders.Neck.X,
-                Y = blueprintSettings.Placeholders.Neck.Y,
-                Scale = blueprintSettings.Placeholders.Neck.Scale,
-                Angle = blueprintSettings.Placeholders.Neck.Angle
-            };
+			int[] setBlueprints = SettingsManager.AppSettings.Printify.Blueprints.Keys.ToArray();
 
-            Product.ProductPlaceholder blackNeckPlaceholder = new Product.ProductPlaceholder {
-                Position = "neck",
-                Images = new Product.ProductPlaceholderImage[] { blackNeckPlaceholderImage }
-            };
+			foreach (int blueprintId in setBlueprints) {
+				Blueprint? bp = blueprints.FirstOrDefault(x => x.Id.Equals(blueprintId));
+				if (bp != null) {
+					PrintifyBlueprints.Add(bp);
+				}
+			}
 
-            Product.ProductPlaceholder whiteNeckPlaceholder = new Product.ProductPlaceholder {
-                Position = "neck",
-                Images = new Product.ProductPlaceholderImage[] { whiteNeckPlaceholderImage }
-            };
+			IsBusy = false;
+		}
 
-            Dictionary<string, bool> colourVariants = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoColours;
+		private async void FetchArtworks()
+		{
+			IsBusy = true;
 
-            Product.ProductPrintArea blackLogoPrintArea = new Product.ProductPrintArea {
-                Variants = variants.Where(v => colourVariants.ContainsKey(v.Title) && colourVariants[v.Title]).Select(v => v.Id).ToArray(),
-                Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, blackNeckPlaceholder }
-            };
+			PrintifyArtworks.Clear();
 
-            Product.ProductPrintArea whiteLogoPrintArea = new Product.ProductPrintArea {
-                Variants = variants.Where(v => colourVariants.ContainsKey(v.Title) && !colourVariants[v.Title]).Select(v => v.Id).ToArray(),
-                Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, whiteNeckPlaceholder }
-            };
+			var artworks = await Artwork.GetArtworksAsync();
 
-            List<Product.ProductPrintArea> printAreas = new();
+			foreach (var artwork in artworks) {
+				var vm = new ArtworkViewModel(artwork);
+				PrintifyArtworks.Add(vm);
+			}
 
-            if (blackLogoPrintArea.Variants.Length > 0) printAreas.Add(blackLogoPrintArea);
-            if (whiteLogoPrintArea.Variants.Length > 0) printAreas.Add(whiteLogoPrintArea);
+			IsBusy = false;
+		}
 
-            if (printAreas.Count > 0) {
-                return new Product($"({titlePrefix}) {_inputTitle!}", _selectedBlueprint!.Id, blueprintSettings.PrintProviderId, variants.ToArray(), printAreas.ToArray());
-            } else {
-                return null!;
-            }
+		private async void FetchPrintProviders(int[] printProvidersIds)
+		{
+			PrintProviders.Clear();
+			_availableVariants.Clear();
 
-        }
+			var printProviders = await PrintProvider.GetPrintProvidersAsync();
 
-        public class VariantColour {
-            public bool Selected { get; set; }
-            public string Colour { get; set; }
-        }
+			List<IEnumerable<Blueprint.BlueprintVariant>> variantsList = new();
 
-        public class VariantSize {
-            public bool Selected { get; set; }
-            public string Size { get; set; }
-        }
-    }
+			foreach (PrintProvider printProvider in printProviders) {
+				if (printProvidersIds.Contains(printProvider.Id)) {
+					PrintProviders.Add(printProvider);
+					variantsList.Add(
+						await Blueprint.BlueprintVariant.GetVariantsAsync(SelectedBlueprint!.Id, printProvider.Id));
+				}
+			}
+
+
+			// Check if there's at least one list of variants
+			if (variantsList.Count > 0) {
+				// Initialize availableVariants with the first list as a starting point
+				_availableVariants.AddRange(variantsList.First());
+
+				// Iterate through the rest of the lists and find common variants
+				foreach (var variants in variantsList.Skip(1)) {
+					// Use LINQ's Intersect to find common variants by Id
+					_availableVariants = _availableVariants
+						.Join(variants, av => av.Options.Colour, v => v.Options.Colour, (av, v) => av)
+						.ToList();
+				}
+			}
+
+			List<string> colours = _availableVariants
+				.Select(variant => variant.Options.Colour)
+				.Distinct()
+				.ToList();
+
+			foreach (string colour in colours) {
+				VariantsColours.Add(new VariantColour { Colour = colour, Selected = false });
+			}
+
+			List<string> sizes = _availableVariants
+				.Select(variant => variant.Options.Size)
+				.Distinct()
+				.ToList();
+
+			foreach (string size in sizes) {
+				VariantsSizes.Add(new VariantSize { Size = size, Selected = false });
+			}
+		}
+
+		private async void CreateProductsAsync()
+		{
+			Debug.WriteLine("Creating products");
+
+			// Create 4 products on Printify, one for each market
+			List<Product.ProductVariant> variants = new();
+
+			foreach (VariantColour colour in VariantsColours) {
+				if (colour.Selected) {
+					foreach (VariantSize size in VariantsSizes) {
+						if (size.Selected) {
+							var variant = _availableVariants.FirstOrDefault(v =>
+								v.Options.Colour.Equals(colour.Colour) && v.Options.Size.Equals(size.Size));
+							if (variant != null) {
+								variants.Add(new Product.ProductVariant(variant.Id, variant.Options.Colour));
+							}
+						}
+					}
+				}
+			}
+
+			await Product.CreateProductAsync(CreateProductObject(variants,
+				SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].UK, "UK"));
+			await Product.CreateProductAsync(CreateProductObject(variants,
+				SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].EU, "EU"));
+			await Product.CreateProductAsync(CreateProductObject(variants,
+				SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].US, "US"));
+			await Product.CreateProductAsync(CreateProductObject(variants,
+				SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].AU, "AU"));
+		}
+
+		private Product CreateProductObject(List<Product.ProductVariant> variants,
+			AppSettings.BlueprintPrintProviderSettings blueprintSettings, string titlePrefix)
+		{
+			Product.ProductPlaceholderImage frontPlaceholderImage = new Product.ProductPlaceholderImage
+			{
+				Id = _selectedArtwork!.Id,
+				X = blueprintSettings.Placeholders.Front.X,
+				Y = blueprintSettings.Placeholders.Front.Y,
+				Scale = blueprintSettings.Placeholders.Front.Scale,
+				Angle = blueprintSettings.Placeholders.Front.Angle
+			};
+
+			Product.ProductPlaceholder frontPlaceholder = new Product.ProductPlaceholder
+			{
+				Position = "front",
+				Images = new Product.ProductPlaceholderImage[] { frontPlaceholderImage }
+			};
+
+			Product.ProductPlaceholderImage blackNeckPlaceholderImage = new Product.ProductPlaceholderImage
+			{
+				Id = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings
+					.BlackLogoArtworkId,
+				X = blueprintSettings.Placeholders.Neck.X,
+				Y = blueprintSettings.Placeholders.Neck.Y,
+				Scale = blueprintSettings.Placeholders.Neck.Scale,
+				Angle = blueprintSettings.Placeholders.Neck.Angle
+			};
+
+			Product.ProductPlaceholderImage whiteNeckPlaceholderImage = new Product.ProductPlaceholderImage
+			{
+				Id = SettingsManager.AppSettings.Printify.Blueprints[_selectedBlueprint!.Id].LogoSettings
+					.WhiteLogoArtworkId,
+				X = blueprintSettings.Placeholders.Neck.X,
+				Y = blueprintSettings.Placeholders.Neck.Y,
+				Scale = blueprintSettings.Placeholders.Neck.Scale,
+				Angle = blueprintSettings.Placeholders.Neck.Angle
+			};
+
+			Product.ProductPlaceholder blackNeckPlaceholder = new Product.ProductPlaceholder
+			{
+				Position = "neck",
+				Images = new Product.ProductPlaceholderImage[] { blackNeckPlaceholderImage }
+			};
+
+			Product.ProductPlaceholder whiteNeckPlaceholder = new Product.ProductPlaceholder
+			{
+				Position = "neck",
+				Images = new Product.ProductPlaceholderImage[] { whiteNeckPlaceholderImage }
+			};
+
+			Dictionary<string, bool> colourVariants = SettingsManager.AppSettings.Printify
+				.Blueprints[_selectedBlueprint!.Id].LogoSettings.BlackLogoColours;
+
+			Product.ProductPrintArea blackLogoPrintArea = new Product.ProductPrintArea
+			{
+				Variants = variants.Where(v => colourVariants.ContainsKey(v.Title) && colourVariants[v.Title])
+					.Select(v => v.Id).ToArray(),
+				Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, blackNeckPlaceholder }
+			};
+
+			Product.ProductPrintArea whiteLogoPrintArea = new Product.ProductPrintArea
+			{
+				Variants = variants.Where(v => colourVariants.ContainsKey(v.Title) && !colourVariants[v.Title])
+					.Select(v => v.Id).ToArray(),
+				Placeholders = new Product.ProductPlaceholder[] { frontPlaceholder, whiteNeckPlaceholder }
+			};
+
+			List<Product.ProductPrintArea> printAreas = new();
+
+			if (blackLogoPrintArea.Variants.Length > 0) printAreas.Add(blackLogoPrintArea);
+			if (whiteLogoPrintArea.Variants.Length > 0) printAreas.Add(whiteLogoPrintArea);
+
+			if (printAreas.Count > 0) {
+				return new Product($"({titlePrefix}) {_inputTitle!}", _selectedBlueprint!.Id,
+					blueprintSettings.PrintProviderId, variants.ToArray(), printAreas.ToArray());
+			} else {
+				return null!;
+			}
+
+		}
+
+		public class VariantColour
+		{
+			public bool Selected { get; set; }
+			public string Colour { get; set; }
+		}
+
+		public class VariantSize
+		{
+			public bool Selected { get; set; }
+			public string Size { get; set; }
+		}
+	}
 }

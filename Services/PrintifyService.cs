@@ -3,6 +3,7 @@ using RestSharp.Authenticators.OAuth2;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TheMule.Models.Printify;
@@ -123,7 +124,7 @@ namespace TheMule.Services
 
             var response = await _client!.PostAsync(request);
 
-            return (response.StatusCode == System.Net.HttpStatusCode.OK);
+            return response.StatusCode == HttpStatusCode.OK;
         }
 
         public static async Task<List<Blueprint>> GetBlueprintsAsync() {

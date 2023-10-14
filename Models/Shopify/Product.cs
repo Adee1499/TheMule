@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
@@ -15,10 +14,10 @@ namespace TheMule.Models.Shopify
         public long Id { get; set; }
 
         [JsonPropertyName("title"), JsonRequired]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [JsonPropertyName("body_html"), JsonRequired]
-        public string BodyHTML { get; set; }
+        public string? BodyHtml { get; set; }
 
         [JsonPropertyName("vendor")]
         public string? Vendor { get; set; }
@@ -29,7 +28,7 @@ namespace TheMule.Models.Shopify
         [JsonPropertyName("created_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public DateTime? CreatedAt { get; set; }
 
-        [JsonPropertyName("handle")]
+        [JsonPropertyName("handle"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string? Handle { get; set; }
 
         [JsonPropertyName("udpated_at"), JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -71,7 +70,7 @@ namespace TheMule.Models.Shopify
         {
             Id = id; 
             Title = title;
-            BodyHTML = bodyHtml;
+            BodyHtml = bodyHtml;
             Vendor = vendor;
             ProductType = productType;
             CreatedAt = createdAt;
@@ -84,6 +83,8 @@ namespace TheMule.Models.Shopify
             Images = images;
             Image = image;
         }
+
+        public Product() {}
 
         public static async Task<IEnumerable<Product>> GetProductsAsync() => await ShopifyService.GetProductsAsync();
 
@@ -110,6 +111,11 @@ namespace TheMule.Models.Shopify
             }
 
             return File.OpenWrite($"{CachePath}-{Title}.png");
+        }
+
+        public static async Task<bool> CreateProductAsync(Product newProduct)
+        {
+	        return await ShopifyService.CreateProductAsync(newProduct);
         }
 
         public class ProductVariant
@@ -213,5 +219,16 @@ namespace TheMule.Models.Shopify
     {
         [JsonPropertyName("products")]
         public Product[] Products { get; set; }
+    }
+
+    public class ProductRequest
+    {
+	    [JsonPropertyName("product")] 
+	    public Product Product { get; set; }
+
+	    public ProductRequest(Product newProduct)
+	    {
+		    Product = newProduct;
+	    }
     }
 }
